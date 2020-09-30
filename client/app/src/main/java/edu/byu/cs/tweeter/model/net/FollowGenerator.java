@@ -60,7 +60,7 @@ public class FollowGenerator {
      * @return the generated {@link Follow} objects.
      */
     public List<Follow> generateUsersAndFollows(int userCount, int minFollowersPerUser,
-                                                       int maxFollowersPerUser, Sort sortOrder) {
+                                                int maxFollowersPerUser, Sort sortOrder) {
         List<User> users = UserGenerator.getInstance().generateUsers(userCount);
         return generateFollowsForUsers(users, minFollowersPerUser, maxFollowersPerUser, sortOrder);
     }
@@ -111,9 +111,12 @@ public class FollowGenerator {
         User testUser = new User("Test", "User", UserGenerator.MALE_IMAGE_URL);
 
         for(User user : users) {
-            Follow follow = new Follow(testUser, user);
-            follows.add(follow);
+            Follow follow1 = new Follow(testUser, user);
+            follows.add(follow1);
+            Follow follow2 = new Follow(user, testUser);
+            follows.add(follow2);
         }
+
 
         // Sort by the specified sort order
         switch (sortOrder) {
