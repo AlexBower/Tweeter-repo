@@ -1,9 +1,7 @@
-package edu.byu.cs.tweeter.view.main.follow;
+package edu.byu.cs.tweeter.view.main.fragments;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,13 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.tweeter.R;
@@ -85,7 +80,7 @@ public class FollowingFragment extends FollowFragment implements FollowingPresen
     /**
      * The adapter for the RecyclerView that displays the Following data.
      */
-    private class FollowingRecyclerViewAdapter extends FollowFragment.FollowingRecyclerViewAdapter implements GetFollowingTask.Observer {
+    private class FollowingRecyclerViewAdapter extends FollowFragment.FollowRecyclerViewAdapter implements GetFollowingTask.Observer {
 
         /**
          * Causes the Adapter to display a loading footer and make a request to get more following

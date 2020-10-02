@@ -16,4 +16,7 @@
     <string name="title_activity_login">Sign in</string>
     <string name="followeeCount">Following: -42</string>
     <string name="followerCount">Followers: -42</string>
+    <string name="dot">•</string>
+    <string name="sampleTime">DATE OF THE STATUS</string>
+    <string name="sampleStatusMessage">This is an example of a really long status message. This should be displayed under the picture and date and should look all fancy.</string>
 </resources>

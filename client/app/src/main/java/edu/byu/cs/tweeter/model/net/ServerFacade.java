@@ -1,5 +1,9 @@
 package edu.byu.cs.tweeter.model.net;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,13 +12,16 @@ import java.util.Map;
 import edu.byu.cs.tweeter.BuildConfig;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Follow;
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
+import edu.byu.cs.tweeter.model.service.request.StoryRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
+import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -24,6 +31,7 @@ public class ServerFacade {
 
     private static Map<User, List<User>> followeesByFollower;
     private static Map<User, List<User>> followersByFollowee;
+    private static Map<User, List<Status>> storyByUser;
 
     /**
      * Performs a login and if successful, returns the logged in user and an auth token. The current
@@ -154,7 +162,7 @@ public class ServerFacade {
         }
 
         if(followersByFollowee == null) {
-            followersByFollowee = initializeFollowers(request);
+            followersByFollowee = initializeFollowers();
         }
 
         List<User> allFollowers = followersByFollowee.get(request.getFollowee());
@@ -196,7 +204,7 @@ public class ServerFacade {
         return followersIndex;
     }
 
-    private Map<User, List<User>> initializeFollowers(FollowerRequest request) {
+    private Map<User, List<User>> initializeFollowers() {
 
         Map<User, List<User>> followersByFollowee = new HashMap<>();
 
@@ -218,6 +226,92 @@ public class ServerFacade {
         }
 
         return followersByFollowee;
+    }
+
+    public StoryResponse getStory(StoryRequest request) {
+
+        // Used in place of assert statements because Android does not support them
+        if(BuildConfig.DEBUG) {
+            if(request.getLimit() < 0) {
+                throw new AssertionError();
+            }
+
+            if(request.getUser() == null) {
+                throw new AssertionError();
+            }
+        }
+
+        if(storyByUser == null) {
+            storyByUser = initializeStories();
+        }
+
+        List<Status> allStatuses = storyByUser.get(request.getUser());
+        List<Status> responseStatuses = new ArrayList<>(request.getLimit());
+
+        boolean hasMorePages = false;
+
+        if(request.getLimit() > 0) {
+            if (allStatuses != null) {
+                int statusIndex = getStoryStartingIndex(request.getLastStatus(), allStatuses);
+
+                for(int limitCounter = 0; statusIndex < allStatuses.size() && limitCounter < request.getLimit(); statusIndex++, limitCounter++) {
+                    responseStatuses.add(allStatuses.get(statusIndex));
+                }
+
+                hasMorePages = statusIndex < allStatuses.size();
+            }
+        }
+
+        return new StoryResponse(responseStatuses, hasMorePages);
+    }
+
+    private int getStoryStartingIndex(Status lastStatus, List<Status> allStatuses) {
+
+        int storyIndex = 0;
+
+        if(lastStatus != null) {
+            // This is a paged request for something after the first page. Find the first item
+            // we should return
+            for (int i = 0; i < allStatuses.size(); i++) {
+                if(lastStatus.equals(allStatuses.get(i))) {
+                    // We found the index of the last item returned last time. Increment to get
+                    // to the first one we should return
+                    storyIndex = i + 1;
+                }
+            }
+        }
+
+        return storyIndex;
+    }
+
+    @SuppressLint("NewApi")
+    private Map<User, List<Status>> initializeStories() {
+
+        Map<User, List<Status>> storyByUser = new HashMap<>();
+
+        if(followersByFollowee == null) {
+            followersByFollowee = initializeFollowers();
+        }
+
+        ArrayList<User> userList = new ArrayList<>();
+
+        for (Map.Entry<User, List<User>> entry : followersByFollowee.entrySet()) {
+            if (!storyByUser.containsKey(entry.getKey())) {
+                List<Status> statuses = new ArrayList<>();
+                for (User user : entry.getValue()) {
+                    statuses.add(new Status("Hey, "
+                            + user.getAlias()
+                            + " check out this really cool url: "
+                            + "http://google.com",
+                            LocalDateTime.now(),
+                            entry.getKey()));
+                }
+
+                storyByUser.put(entry.getKey(), statuses);
+            }
+        }
+
+        return storyByUser;
     }
 
     /**
