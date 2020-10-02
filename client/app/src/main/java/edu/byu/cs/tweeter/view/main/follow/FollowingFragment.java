@@ -27,7 +27,6 @@ import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowingTask;
-import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 /**
  * The fragment that displays on the 'Following' tab.
@@ -86,127 +85,15 @@ public class FollowingFragment extends FollowFragment implements FollowingPresen
     /**
      * The adapter for the RecyclerView that displays the Following data.
      */
-    private class FollowingRecyclerViewAdapter extends RecyclerView.Adapter<FollowHolder> implements GetFollowingTask.Observer {
-
-        private final List<User> users = new ArrayList<>();
-
-        private edu.byu.cs.tweeter.model.domain.User lastFollowee;
-
-        private boolean hasMorePages;
-        private boolean isLoading = false;
-
-        /**
-         * Creates an instance and loads the first page of following data.
-         */
-        FollowingRecyclerViewAdapter() {
-            loadMoreItems();
-        }
-
-        /**
-         * Adds new users to the list from which the RecyclerView retrieves the users it displays
-         * and notifies the RecyclerView that items have been added.
-         *
-         * @param newUsers the users to add.
-         */
-        void addItems(List<User> newUsers) {
-            int startInsertPosition = users.size();
-            users.addAll(newUsers);
-            this.notifyItemRangeInserted(startInsertPosition, newUsers.size());
-        }
-
-        /**
-         * Adds a single user to the list from which the RecyclerView retrieves the users it
-         * displays and notifies the RecyclerView that an item has been added.
-         *
-         * @param user the user to add.
-         */
-        void addItem(User user) {
-            users.add(user);
-            this.notifyItemInserted(users.size() - 1);
-        }
-
-        /**
-         * Removes a user from the list from which the RecyclerView retrieves the users it displays
-         * and notifies the RecyclerView that an item has been removed.
-         *
-         * @param user the user to remove.
-         */
-        void removeItem(User user) {
-            int position = users.indexOf(user);
-            users.remove(position);
-            this.notifyItemRemoved(position);
-        }
-
-        /**
-         *  Creates a view holder for a followee to be displayed in the RecyclerView or for a message
-         *  indicating that new rows are being loaded if we are waiting for rows to load.
-         *
-         * @param parent the parent view.
-         * @param viewType the type of the view (ignored in the current implementation).
-         * @return the view holder.
-         */
-        @NonNull
-        @Override
-        public FollowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(FollowingFragment.this.getContext());
-            View view;
-
-            if(viewType == LOADING_DATA_VIEW) {
-                view =layoutInflater.inflate(R.layout.loading_row, parent, false);
-
-            } else {
-                view = layoutInflater.inflate(R.layout.user_row, parent, false);
-            }
-
-            return new FollowHolder(view);
-        }
-
-        /**
-         * Binds the followee at the specified position unless we are currently loading new data. If
-         * we are loading new data, the display at that position will be the data loading footer.
-         *
-         * @param followHolder the ViewHolder to which the followee should be bound.
-         * @param position the position (in the list of followees) that contains the followee to be
-         *                 bound.
-         */
-        @Override
-        public void onBindViewHolder(@NonNull FollowHolder followHolder, int position) {
-            if(!isLoading) {
-                followHolder.bindUser(users.get(position));
-            }
-        }
-
-        /**
-         * Returns the current number of followees available for display.
-         * @return the number of followees available for display.
-         */
-        @Override
-        public int getItemCount() {
-            return users.size();
-        }
-
-        /**
-         * Returns the type of the view that should be displayed for the item currently at the
-         * specified position.
-         *
-         * @param position the position of the items whose view type is to be returned.
-         * @return the view type.
-         */
-        @Override
-        public int getItemViewType(int position) {
-            return (position == users.size() - 1 && isLoading) ? LOADING_DATA_VIEW : ITEM_VIEW;
-        }
+    private class FollowingRecyclerViewAdapter extends FollowFragment.FollowingRecyclerViewAdapter implements GetFollowingTask.Observer {
 
         /**
          * Causes the Adapter to display a loading footer and make a request to get more following
          * data.
          */
-        void loadMoreItems() {
-            isLoading = true;
-            addLoadingFooter();
-
+        void doLoadMoreItems() {
             GetFollowingTask getFollowingTask = new GetFollowingTask(presenter, this);
-            FollowingRequest request = new FollowingRequest(user, PAGE_SIZE, lastFollowee);
+            FollowingRequest request = new FollowingRequest(user, PAGE_SIZE, lastUser);
             getFollowingTask.execute(request);
         }
 
@@ -220,7 +107,7 @@ public class FollowingFragment extends FollowFragment implements FollowingPresen
         public void followeesRetrieved(FollowingResponse followingResponse) {
             List<User> followees = followingResponse.getFollowees();
 
-            lastFollowee = (followees.size() > 0) ? followees.get(followees.size() -1) : null;
+            lastUser = (followees.size() > 0) ? followees.get(followees.size() -1) : null;
             hasMorePages = followingResponse.getHasMorePages();
 
             isLoading = false;
@@ -238,22 +125,6 @@ public class FollowingFragment extends FollowFragment implements FollowingPresen
             Log.e(LOG_TAG, exception.getMessage(), exception);
             removeLoadingFooter();
             Toast.makeText(getContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-        /**
-         * Adds a dummy user to the list of users so the RecyclerView will display a view (the
-         * loading footer view) at the bottom of the list.
-         */
-        private void addLoadingFooter() {
-            addItem(new User("Dummy", "User", ""));
-        }
-
-        /**
-         * Removes the dummy user from the list of users so the RecyclerView will stop displaying
-         * the loading footer at the bottom of the list.
-         */
-        private void removeLoadingFooter() {
-            removeItem(users.get(users.size() - 1));
         }
     }
 

@@ -26,7 +26,6 @@ import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.presenter.FollowerPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowerTask;
-import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 public class FollowerFragment extends FollowFragment implements FollowerPresenter.View {
 
@@ -71,75 +70,11 @@ public class FollowerFragment extends FollowFragment implements FollowerPresente
         return view;
     }
 
-    private class FollowerRecyclerViewAdapter extends RecyclerView.Adapter<FollowerFragment.FollowHolder> implements GetFollowerTask.Observer {
+    private class FollowerRecyclerViewAdapter extends FollowFragment.FollowingRecyclerViewAdapter implements GetFollowerTask.Observer {
 
-        private final List<User> users = new ArrayList<>();
-
-        private edu.byu.cs.tweeter.model.domain.User lastFollower;
-
-        private boolean hasMorePages;
-        private boolean isLoading = false;
-
-        FollowerRecyclerViewAdapter() {
-            loadMoreItems();
-        }
-
-        void addItems(List<User> newUsers) {
-            int startInsertPosition = users.size();
-            users.addAll(newUsers);
-            this.notifyItemRangeInserted(startInsertPosition, newUsers.size());
-        }
-
-        void addItem(User user) {
-            users.add(user);
-            this.notifyItemInserted(users.size() - 1);
-        }
-
-        void removeItem(User user) {
-            int position = users.indexOf(user);
-            users.remove(position);
-            this.notifyItemRemoved(position);
-        }
-
-        @NonNull
-        @Override
-        public FollowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(FollowerFragment.this.getContext());
-            View view;
-
-            if(viewType == LOADING_DATA_VIEW) {
-                view = layoutInflater.inflate(R.layout.loading_row, parent, false);
-
-            } else {
-                view = layoutInflater.inflate(R.layout.user_row, parent, false);
-            }
-
-            return new FollowerFragment.FollowHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull FollowHolder followHolder, int position) {
-            if(!isLoading) {
-                followHolder.bindUser(users.get(position));
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return users.size();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return (position == users.size() - 1 && isLoading) ? LOADING_DATA_VIEW : ITEM_VIEW;
-        }
-
-        void loadMoreItems() {
-            isLoading = true;
-            addLoadingFooter();
-
+        void doLoadMoreItems() {
             GetFollowerTask getFollowerTask = new GetFollowerTask(presenter, this);
-            FollowerRequest request = new FollowerRequest(user, PAGE_SIZE, lastFollower);
+            FollowerRequest request = new FollowerRequest(user, PAGE_SIZE, lastUser);
             getFollowerTask.execute(request);
         }
 
@@ -147,7 +82,7 @@ public class FollowerFragment extends FollowFragment implements FollowerPresente
         public void followersRetrieved(FollowerResponse followerResponse) {
             List<User> followers = followerResponse.getFollowers();
 
-            lastFollower = (followers.size() > 0) ? followers.get(followers.size() -1) : null;
+            lastUser = (followers.size() > 0) ? followers.get(followers.size() -1) : null;
             hasMorePages = followerResponse.getHasMorePages();
 
             isLoading = false;
@@ -160,14 +95,6 @@ public class FollowerFragment extends FollowFragment implements FollowerPresente
             Log.e(LOG_TAG, exception.getMessage(), exception);
             removeLoadingFooter();
             Toast.makeText(getContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-        private void addLoadingFooter() {
-            addItem(new User("Dummy", "User", ""));
-        }
-
-        private void removeLoadingFooter() {
-            removeItem(users.get(users.size() - 1));
         }
     }
 
