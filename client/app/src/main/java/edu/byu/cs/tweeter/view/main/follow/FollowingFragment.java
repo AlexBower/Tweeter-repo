@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.view.main.following;
+package edu.byu.cs.tweeter.view.main.follow;
 
 import android.os.Bundle;
 
@@ -32,19 +32,10 @@ import edu.byu.cs.tweeter.view.util.ImageUtils;
 /**
  * The fragment that displays on the 'Following' tab.
  */
-public class FollowingFragment extends Fragment implements FollowingPresenter.View {
+public class FollowingFragment extends FollowFragment implements FollowingPresenter.View {
 
     private static final String LOG_TAG = "FollowingFragment";
-    private static final String USER_KEY = "UserKey";
-    private static final String AUTH_TOKEN_KEY = "AuthTokenKey";
 
-    private static final int LOADING_DATA_VIEW = 0;
-    private static final int ITEM_VIEW = 1;
-
-    private static final int PAGE_SIZE = 10;
-
-    private User user;
-    private AuthToken authToken;
     private FollowingPresenter presenter;
 
     private FollowingRecyclerViewAdapter followingRecyclerViewAdapter;
@@ -71,7 +62,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_following, container, false);
+        View view = inflater.inflate(R.layout.fragment_follow, container, false);
 
         //noinspection ConstantConditions
         user = (User) getArguments().getSerializable(USER_KEY);
@@ -79,7 +70,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
         presenter = new FollowingPresenter(this);
 
-        RecyclerView followingRecyclerView = view.findViewById(R.id.followingRecyclerView);
+        RecyclerView followingRecyclerView = view.findViewById(R.id.followRecyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         followingRecyclerView.setLayoutManager(layoutManager);
@@ -93,50 +84,9 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     }
 
     /**
-     * The ViewHolder for the RecyclerView that displays the Following data.
-     */
-    private class FollowingHolder extends RecyclerView.ViewHolder {
-
-        private final ImageView userImage;
-        private final TextView userAlias;
-        private final TextView userName;
-
-        /**
-         * Creates an instance and sets an OnClickListener for the user's row.
-         *
-         * @param itemView the view on which the user will be displayed.
-         */
-        FollowingHolder(@NonNull View itemView) {
-            super(itemView);
-
-            userImage = itemView.findViewById(R.id.userImage);
-            userAlias = itemView.findViewById(R.id.userAlias);
-            userName = itemView.findViewById(R.id.userName);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        /**
-         * Binds the user's data to the view.
-         *
-         * @param user the user.
-         */
-        void bindUser(User user) {
-            userImage.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
-            userAlias.setText(user.getAlias());
-            userName.setText(user.getName());
-        }
-    }
-
-    /**
      * The adapter for the RecyclerView that displays the Following data.
      */
-    private class FollowingRecyclerViewAdapter extends RecyclerView.Adapter<FollowingHolder> implements GetFollowingTask.Observer {
+    private class FollowingRecyclerViewAdapter extends RecyclerView.Adapter<FollowHolder> implements GetFollowingTask.Observer {
 
         private final List<User> users = new ArrayList<>();
 
@@ -197,7 +147,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
          */
         @NonNull
         @Override
-        public FollowingHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public FollowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(FollowingFragment.this.getContext());
             View view;
 
@@ -208,21 +158,21 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
                 view = layoutInflater.inflate(R.layout.user_row, parent, false);
             }
 
-            return new FollowingHolder(view);
+            return new FollowHolder(view);
         }
 
         /**
          * Binds the followee at the specified position unless we are currently loading new data. If
          * we are loading new data, the display at that position will be the data loading footer.
          *
-         * @param followingHolder the ViewHolder to which the followee should be bound.
+         * @param followHolder the ViewHolder to which the followee should be bound.
          * @param position the position (in the list of followees) that contains the followee to be
          *                 bound.
          */
         @Override
-        public void onBindViewHolder(@NonNull FollowingHolder followingHolder, int position) {
+        public void onBindViewHolder(@NonNull FollowHolder followHolder, int position) {
             if(!isLoading) {
-                followingHolder.bindUser(users.get(position));
+                followHolder.bindUser(users.get(position));
             }
         }
 

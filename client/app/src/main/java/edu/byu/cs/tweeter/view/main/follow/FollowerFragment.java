@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.view.main.follower;
+package edu.byu.cs.tweeter.view.main.follow;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -28,20 +28,10 @@ import edu.byu.cs.tweeter.presenter.FollowerPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowerTask;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
-public class FollowerFragment extends Fragment implements FollowerPresenter.View {
-
+public class FollowerFragment extends FollowFragment implements FollowerPresenter.View {
 
     private static final String LOG_TAG = "FollowerFragment";
-    private static final String USER_KEY = "UserKey";
-    private static final String AUTH_TOKEN_KEY = "AuthTokenKey";
 
-    private static final int LOADING_DATA_VIEW = 0;
-    private static final int ITEM_VIEW = 1;
-
-    private static final int PAGE_SIZE = 10;
-
-    private User user;
-    private AuthToken authToken;
     private FollowerPresenter presenter;
 
     private FollowerRecyclerViewAdapter followerRecyclerViewAdapter;
@@ -60,7 +50,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_follower, container, false);
+        View view = inflater.inflate(R.layout.fragment_follow, container, false);
 
         //noinspection ConstantConditions
         user = (User) getArguments().getSerializable(USER_KEY);
@@ -68,7 +58,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
         presenter = new FollowerPresenter(this);
 
-        RecyclerView followerRecyclerView = view.findViewById(R.id.followerRecyclerView);
+        RecyclerView followerRecyclerView = view.findViewById(R.id.followRecyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         followerRecyclerView.setLayoutManager(layoutManager);
@@ -81,35 +71,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         return view;
     }
 
-    private class FollowerHolder extends RecyclerView.ViewHolder {
-
-        private final ImageView userImage;
-        private final TextView userAlias;
-        private final TextView userName;
-
-        FollowerHolder(@NonNull View itemView) {
-            super(itemView);
-
-            userImage = itemView.findViewById(R.id.userImage);
-            userAlias = itemView.findViewById(R.id.userAlias);
-            userName = itemView.findViewById(R.id.userName);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        void bindUser(User user) {
-            userImage.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
-            userAlias.setText(user.getAlias());
-            userName.setText(user.getName());
-        }
-    }
-
-    private class FollowerRecyclerViewAdapter extends RecyclerView.Adapter<FollowerFragment.FollowerHolder> implements GetFollowerTask.Observer {
+    private class FollowerRecyclerViewAdapter extends RecyclerView.Adapter<FollowerFragment.FollowHolder> implements GetFollowerTask.Observer {
 
         private final List<User> users = new ArrayList<>();
 
@@ -141,7 +103,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
         @NonNull
         @Override
-        public FollowerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public FollowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(FollowerFragment.this.getContext());
             View view;
 
@@ -152,13 +114,13 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
                 view = layoutInflater.inflate(R.layout.user_row, parent, false);
             }
 
-            return new FollowerFragment.FollowerHolder(view);
+            return new FollowerFragment.FollowHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull FollowerHolder followerHolder, int position) {
+        public void onBindViewHolder(@NonNull FollowHolder followHolder, int position) {
             if(!isLoading) {
-                followerHolder.bindUser(users.get(position));
+                followHolder.bindUser(users.get(position));
             }
         }
 
