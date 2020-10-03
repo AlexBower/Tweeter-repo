@@ -20,16 +20,17 @@ import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
-import edu.byu.cs.tweeter.presenter.StoryPresenter;
+import edu.byu.cs.tweeter.presenter.FeedPresenter;
+import edu.byu.cs.tweeter.view.asyncTasks.GetFeedTask;
 import edu.byu.cs.tweeter.view.asyncTasks.GetStoryTask;
 
-public class StoryFragment extends StatusFragment implements StoryPresenter.View {
+public class FeedFragment extends StatusFragment implements FeedPresenter.View {
 
-    private static final String LOG_TAG = "StoryFragment";
+    private static final String LOG_TAG = "FeedFragment";
 
-    private StoryPresenter presenter;
+    private FeedPresenter presenter;
 
-    private StoryRecyclerViewAdapter storyRecyclerViewAdapter;
+    private FeedRecyclerViewAdapter feedRecyclerViewAdapter;
 
     /**
      * Creates an instance of the fragment and places the user and auth token in an arguments
@@ -39,8 +40,8 @@ public class StoryFragment extends StatusFragment implements StoryPresenter.View
      * @param authToken the auth token for this user's session.
      * @return the fragment.
      */
-    public static StoryFragment newInstance(User user, AuthToken authToken) {
-        StoryFragment fragment = new StoryFragment();
+    public static FeedFragment newInstance(User user, AuthToken authToken) {
+        FeedFragment fragment = new FeedFragment();
 
         Bundle args = new Bundle(2);
         args.putSerializable(USER_KEY, user);
@@ -59,27 +60,27 @@ public class StoryFragment extends StatusFragment implements StoryPresenter.View
         user = (User) getArguments().getSerializable(USER_KEY);
         authToken = (AuthToken) getArguments().getSerializable(AUTH_TOKEN_KEY);
 
-        presenter = new StoryPresenter(this);
+        presenter = new FeedPresenter(this);
 
         RecyclerView statusRecyclerView = view.findViewById(R.id.statusRecyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         statusRecyclerView.setLayoutManager(layoutManager);
 
-        storyRecyclerViewAdapter = new StoryFragment.StoryRecyclerViewAdapter();
-        statusRecyclerView.setAdapter(storyRecyclerViewAdapter);
+        feedRecyclerViewAdapter = new FeedRecyclerViewAdapter();
+        statusRecyclerView.setAdapter(feedRecyclerViewAdapter);
 
         statusRecyclerView.addOnScrollListener(new StatusRecyclerViewPaginationScrollListener(layoutManager));
 
         return view;
     }
 
-    private class StoryRecyclerViewAdapter extends StoryFragment.StatusRecyclerViewAdapter implements GetStoryTask.Observer {
+    private class FeedRecyclerViewAdapter extends StatusRecyclerViewAdapter implements GetFeedTask.Observer {
 
         void doLoadMoreItems() {
-            GetStoryTask getStoryTask = new GetStoryTask(presenter, this);
+            GetFeedTask getFeedTask = new GetFeedTask(presenter, this);
             StatusRequest request = new StatusRequest(user, PAGE_SIZE, lastStatus);
-            getStoryTask.execute(request);
+            getFeedTask.execute(request);
         }
 
         @Override
@@ -91,7 +92,7 @@ public class StoryFragment extends StatusFragment implements StoryPresenter.View
 
             isLoading = false;
             removeLoadingFooter();
-            storyRecyclerViewAdapter.addItems(statuses);
+            feedRecyclerViewAdapter.addItems(statuses);
         }
 
 
@@ -125,10 +126,10 @@ public class StoryFragment extends StatusFragment implements StoryPresenter.View
             int totalItemCount = layoutManager.getItemCount();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-            if (!storyRecyclerViewAdapter.isLoading && storyRecyclerViewAdapter.hasMorePages) {
+            if (!feedRecyclerViewAdapter.isLoading && feedRecyclerViewAdapter.hasMorePages) {
                 if ((visibleItemCount + firstVisibleItemPosition) >=
                         totalItemCount && firstVisibleItemPosition >= 0) {
-                    storyRecyclerViewAdapter.loadMoreItems();
+                    feedRecyclerViewAdapter.loadMoreItems();
                 }
             }
         }

@@ -1,7 +1,6 @@
 package edu.byu.cs.tweeter.model.net;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,11 +16,11 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
-import edu.byu.cs.tweeter.model.service.request.StoryRequest;
+import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
-import edu.byu.cs.tweeter.model.service.response.StoryResponse;
+import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -32,6 +31,7 @@ public class ServerFacade {
     private static Map<User, List<User>> followeesByFollower;
     private static Map<User, List<User>> followersByFollowee;
     private static Map<User, List<Status>> storyByUser;
+    private static Map<User, List<Status>> feedByUser;
 
     /**
      * Performs a login and if successful, returns the logged in user and an auth token. The current
@@ -208,8 +208,6 @@ public class ServerFacade {
 
         Map<User, List<User>> followersByFollowee = new HashMap<>();
 
-        ArrayList<User> userList = new ArrayList<>();
-
         List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
                 0, 50, FollowGenerator.Sort.FOLLOWEE_FOLLOWER);
 
@@ -228,7 +226,7 @@ public class ServerFacade {
         return followersByFollowee;
     }
 
-    public StoryResponse getStory(StoryRequest request) {
+    public StatusResponse getStory(StatusRequest request) {
 
         // Used in place of assert statements because Android does not support them
         if(BuildConfig.DEBUG) {
@@ -252,7 +250,7 @@ public class ServerFacade {
 
         if(request.getLimit() > 0) {
             if (allStatuses != null) {
-                int statusIndex = getStoryStartingIndex(request.getLastStatus(), allStatuses);
+                int statusIndex = getStatusStartingIndex(request.getLastStatus(), allStatuses);
 
                 for(int limitCounter = 0; statusIndex < allStatuses.size() && limitCounter < request.getLimit(); statusIndex++, limitCounter++) {
                     responseStatuses.add(allStatuses.get(statusIndex));
@@ -262,10 +260,69 @@ public class ServerFacade {
             }
         }
 
-        return new StoryResponse(responseStatuses, hasMorePages);
+        return new StatusResponse(responseStatuses, hasMorePages);
     }
 
-    private int getStoryStartingIndex(Status lastStatus, List<Status> allStatuses) {
+    public StatusResponse getFeed(StatusRequest request) {
+
+        // Used in place of assert statements because Android does not support them
+        if(BuildConfig.DEBUG) {
+            if(request.getLimit() < 0) {
+                throw new AssertionError();
+            }
+
+            if(request.getUser() == null) {
+                throw new AssertionError();
+            }
+        }
+
+        if (feedByUser == null) {
+            feedByUser = initializeFeeds();
+        }
+
+        List<Status> allStatuses = feedByUser.get(request.getUser());
+        List<Status> responseStatuses = new ArrayList<>(request.getLimit());
+
+        boolean hasMorePages = false;
+
+        if(request.getLimit() > 0) {
+            if (allStatuses != null) {
+                int statusIndex = getStatusStartingIndex(request.getLastStatus(), allStatuses);
+
+                for(int limitCounter = 0; statusIndex < allStatuses.size() && limitCounter < request.getLimit(); statusIndex++, limitCounter++) {
+                    responseStatuses.add(allStatuses.get(statusIndex));
+                }
+
+                hasMorePages = statusIndex < allStatuses.size();
+            }
+        }
+
+        return new StatusResponse(responseStatuses, hasMorePages);
+    }
+
+    private Map<User, List<Status>> initializeFeeds() {
+
+        Map<User, List<Status>> feedByUser = new HashMap<>();
+
+        if(storyByUser == null) {
+            storyByUser = initializeStories();
+        }
+
+        for (Map.Entry<User, List<User>> entry : followersByFollowee.entrySet()) {
+            if (!feedByUser.containsKey(entry.getKey())) {
+                List<Status> statuses = new ArrayList<>();
+                for (User user : entry.getValue()) {
+                    statuses.add(storyByUser.get(user).get(0));
+                }
+
+                feedByUser.put(entry.getKey(), statuses);
+            }
+        }
+
+        return feedByUser;
+    }
+
+    private int getStatusStartingIndex(Status lastStatus, List<Status> allStatuses) {
 
         int storyIndex = 0;
 
@@ -292,8 +349,6 @@ public class ServerFacade {
         if(followersByFollowee == null) {
             followersByFollowee = initializeFollowers();
         }
-
-        ArrayList<User> userList = new ArrayList<>();
 
         for (Map.Entry<User, List<User>> entry : followersByFollowee.entrySet()) {
             if (!storyByUser.containsKey(entry.getKey())) {

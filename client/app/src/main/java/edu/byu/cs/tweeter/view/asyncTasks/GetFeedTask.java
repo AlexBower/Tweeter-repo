@@ -6,11 +6,11 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
-import edu.byu.cs.tweeter.presenter.StoryPresenter;
+import edu.byu.cs.tweeter.presenter.FeedPresenter;
 
-public class GetStoryTask extends AsyncTask<StatusRequest, Void, StatusResponse> {
+public class GetFeedTask extends AsyncTask<StatusRequest, Void, StatusResponse> {
 
-    private final StoryPresenter presenter;
+    private final FeedPresenter presenter;
     private final Observer observer;
     private Exception exception;
 
@@ -19,7 +19,7 @@ public class GetStoryTask extends AsyncTask<StatusRequest, Void, StatusResponse>
         void handleException(Exception exception);
     }
 
-    public GetStoryTask(StoryPresenter presenter, Observer observer) {
+    public GetFeedTask(FeedPresenter presenter, Observer observer) {
         if(observer == null) {
             throw new NullPointerException();
         }
@@ -34,7 +34,7 @@ public class GetStoryTask extends AsyncTask<StatusRequest, Void, StatusResponse>
         StatusResponse response = null;
 
         try {
-            response = presenter.getStory(statusRequests[0]);
+            response = presenter.getFeed(statusRequests[0]);
         } catch (IOException ex) {
             exception = ex;
         }

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +60,14 @@ abstract public class StatusFragment extends PaginatedFragment {
             userImage.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
             userAlias.setText(user.getAlias());
             userName.setText(user.getName());
-            statusTime.setText(String.valueOf(status.getTime().getDayOfMonth()));
+            statusTime.setText(formatTime(status.getTime()));
             statusMessage.setText(status.getMessage());
+        }
+
+        @SuppressLint("NewApi")
+        String formatTime(LocalDateTime time) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy  hh:mm a");
+            return time.format(formatter);
         }
     }
 
