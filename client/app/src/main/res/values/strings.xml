@@ -11,6 +11,9 @@
     <string name="followingTabTitle">Following</string>
     <string name="followersTabTitle">Followers</string>
 
+    <string name="loginTabTitle">Login</string>
+    <string name="registerTabTitle">Register</string>
+
     <string name="sampleAlias">"@UserAlias"</string>
     <string name="sampleUserName">The User</string>
     <string name="title_activity_login">Sign in</string>
@@ -19,4 +22,5 @@
     <string name="dot">•</string>
     <string name="sampleTime">DATE OF THE STATUS</string>
     <string name="sampleStatusMessage">This is an example of a really long status message. This should be displayed under the picture and date and should look all fancy.</string>
+    <string name="tweeter">tweeter</string>
 </resources>

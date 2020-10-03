@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class PaginatedFragment extends Fragment {
+abstract public class PaginatedFragment extends Fragment {
     protected static final String USER_KEY = "UserKey";
 
     protected User user;
