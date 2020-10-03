@@ -1,6 +1,12 @@
 package edu.byu.cs.tweeter.view.main.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +17,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import edu.byu.cs.tweeter.R;
@@ -61,7 +71,48 @@ abstract public class StatusFragment extends PaginatedFragment {
             userAlias.setText(user.getAlias());
             userName.setText(user.getName());
             statusTime.setText(formatTime(status.getTime()));
-            statusMessage.setText(status.getMessage());
+            setupMessage(status.getMessage());
+        }
+
+        void setupMessage(String text) {
+            SpannableString spannableString = new SpannableString(text);
+
+            List<String> strings = new ArrayList<>(Arrays.asList(text.split(" ")));
+            Collections.reverse(strings);
+            for (String string : strings) {
+                int startIndex = -1;
+                try {
+                    URL url = new URL(string);
+                    startIndex = text.lastIndexOf(string);
+                    ClickableSpan clickableSpan = new ClickableSpan() {
+                        @Override
+                        public void onClick(View widget) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(string));
+                            startActivity(browserIntent);
+                        }
+                    };
+                    spannableString.setSpan(clickableSpan, startIndex,startIndex + string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } catch (MalformedURLException e) {
+                    if (string.startsWith("@")) {
+                        startIndex = text.lastIndexOf(string);
+
+                        ClickableSpan clickableSpan = new ClickableSpan() {
+                            @Override
+                            public void onClick(View widget) {
+                                Toast.makeText(getContext(), "USER MENTION: " + string, Toast.LENGTH_SHORT).show();
+                            }
+                        };
+                        spannableString.setSpan(clickableSpan, startIndex,startIndex + string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+                if (startIndex != -1) {
+                    text = text.substring(0, startIndex)
+                            + text.substring(startIndex + string.length());
+                }
+            }
+
+            statusMessage.setText(spannableString);
+            statusMessage.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
         @SuppressLint("NewApi")
