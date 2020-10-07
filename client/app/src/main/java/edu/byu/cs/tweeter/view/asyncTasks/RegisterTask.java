@@ -50,11 +50,13 @@ public class RegisterTask extends AsyncTask<RegisterRequest, Void, RegisterRespo
     }
 
     private void loadImage(User user) {
-        try {
-            byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
-            user.setImageBytes(bytes);
-        } catch (IOException e) {
-            Log.e(this.getClass().getName(), e.toString(), e);
+        if (!user.getImageUrl().equals("")) {
+            try {
+                byte[] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
+                user.setImageBytes(bytes);
+            } catch (IOException e) {
+                Log.e(this.getClass().getName(), e.toString(), e);
+            }
         }
     }
 

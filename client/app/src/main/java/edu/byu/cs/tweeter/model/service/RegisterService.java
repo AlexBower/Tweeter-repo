@@ -23,8 +23,10 @@ public class RegisterService {
     }
 
     private void loadImage(User user) throws IOException {
-        byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
-        user.setImageBytes(bytes);
+        if (!user.getImageUrl().equals("")) {
+            byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
+            user.setImageBytes(bytes);
+        }
     }
 
     ServerFacade getServerFacade() {

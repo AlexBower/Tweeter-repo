@@ -1,8 +1,12 @@
 package edu.byu.cs.tweeter.view;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -20,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import java.io.ByteArrayOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -133,15 +138,14 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
 
         TextView takePictureTextView = view.findViewById(R.id.takeProfilePicture);
         SpannableString spannableString = new SpannableString(takePictureTextView.getText());
-
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                Toast.makeText(getContext(), "Clicked Take Profile Picture", Toast.LENGTH_LONG).show();
+                dispatchTakePictureIntent();
+                //Toast.makeText(getContext(), "Clicked Take Profile Picture", Toast.LENGTH_LONG).show();
             }
         };
         spannableString.setSpan(clickableSpan, 0,takePictureTextView.getText().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         takePictureTextView.setText(spannableString);
         takePictureTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -181,5 +185,31 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
     public void handleException(Exception exception) {
         Log.e(LOG_TAG, exception.getMessage(), exception);
         Toast.makeText(getContext(), "Failed to login because of exception: " + exception.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+            // display error state to the user
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            assert imageBitmap != null;
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            imageBitmap.recycle();
+            registerRequest.setImageBytes(byteArray);
+        }
     }
 }
