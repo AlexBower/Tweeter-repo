@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.LoginFragment">
+    tools:context=".view.RegisterFragment">
 
     <TableLayout
         android:stretchColumns="1"
@@ -15,16 +15,35 @@
 
         <TableRow>
             <EditText
+                android:id="@+id/firstNameField"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:hint="@string/usernameHint"
+                android:hint="@string/firstNameHint"
                 android:inputType="text"
-                android:id="@+id/userNameField"
                 android:layout_span="3" />
         </TableRow>
 
         <TableRow>
+            <EditText
+                android:id="@+id/lastNameField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lastNameHint"
+                android:inputType="text"
+                android:layout_span="3" />
+        </TableRow>
 
+        <TableRow>
+            <EditText
+                android:id="@+id/userNameField"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:hint="@string/usernameHint"
+                android:inputType="text"
+                android:layout_span="3" />
+        </TableRow>
+
+        <TableRow>
             <EditText
                 android:id="@+id/passwordField"
                 android:layout_width="match_parent"
@@ -35,11 +54,21 @@
         </TableRow>
 
         <TableRow>
-            <Button
-                android:id="@+id/LoginButton"
+            <TextView
+                android:id="@+id/takeProfilePicture"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/loginButton"
+                android:textAlignment="center"
+                android:text="@string/takeProfilePicture"
+                android:layout_span="3" />
+        </TableRow>
+
+        <TableRow>
+            <Button
+                android:id="@+id/RegisterButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/registerButton"
                 android:layout_span="3" />
         </TableRow>
 

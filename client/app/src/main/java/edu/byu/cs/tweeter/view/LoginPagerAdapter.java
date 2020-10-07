@@ -36,7 +36,7 @@ public class LoginPagerAdapter extends FragmentPagerAdapter {
         if (position == LOGIN_FRAGMENT_POSITION) {
             return LoginFragment.newInstance();
         } else if (position == REGISTER_FRAGMENT_POSITION) {
-            return RegisterFragment.newInstance(position + 1);
+            return RegisterFragment.newInstance();
         } else {
             return PlaceholderFragment.newInstance(position + 1);
         }

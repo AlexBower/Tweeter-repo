@@ -23,4 +23,11 @@
     <string name="sampleTime">DATE OF THE STATUS</string>
     <string name="sampleStatusMessage">This is an example of a really long status message. This should be displayed under the picture and date and should look all fancy.</string>
     <string name="tweeter">tweeter</string>
+    <string name="passwordHint">password</string>
+    <string name="usernameHint">\@username</string>
+    <string name="loginButton">Login</string>
+    <string name="registerButton">REGISTER</string>
+    <string name="firstNameHint">first name</string>
+    <string name="lastNameHint">last name</string>
+    <string name="takeProfilePicture">Take Profile Picture</string>
 </resources>

@@ -25,7 +25,6 @@ import edu.byu.cs.tweeter.view.main.MainActivity;
  */
 public class LoginActivity extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
