@@ -58,8 +58,10 @@ abstract public class StatusFragment extends PaginatedFragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getContext(), "You selected '" + userName.getText() + "'. " +
-                            statusMessage.getText() + " from " + statusTime.getText(), Toast.LENGTH_SHORT).show();
+                    if (userName != null) {
+                        Toast.makeText(getContext(), "You selected '" + userName.getText() + "'. " +
+                                statusMessage.getText() + " from " + statusTime.getText(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }

@@ -9,29 +9,42 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.request.FollowCountRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
+import edu.byu.cs.tweeter.presenter.FollowCountPresenter;
+import edu.byu.cs.tweeter.view.asyncTasks.GetFollowCountTask;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 /**
  * The main activity for the application. Contains tabs for feed, story, following, and followers.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FollowCountPresenter.View, GetFollowCountTask.Observer {
+
+    private static final String LOG_TAG = "MainActivity";
 
     public static final String CURRENT_USER_KEY = "CurrentUser";
     public static final String AUTH_TOKEN_KEY = "AuthTokenKey";
+
+    private FollowCountPresenter presenter;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        User user = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
+        presenter = new FollowCountPresenter(this);
+
+        user = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
         if(user == null) {
             throw new RuntimeException("User not passed to activity");
         }
@@ -66,9 +79,31 @@ public class MainActivity extends AppCompatActivity {
         userImageView.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
 
         TextView followeeCount = findViewById(R.id.followeeCount);
-        followeeCount.setText("Following: " + "-42");
+        followeeCount.setText("Following: ");
 
         TextView followerCount = findViewById(R.id.followerCount);
-        followerCount.setText("Followers: " + "-42");
+        followerCount.setText("Followers: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GetFollowCountTask getFollowCountTask = new GetFollowCountTask(presenter, this);
+        getFollowCountTask.execute(new FollowCountRequest(user));
+    }
+
+    @Override
+    public void followCountRetrieved(FollowCountResponse followCountResponse) {
+        TextView followeeCount = findViewById(R.id.followeeCount);
+        followeeCount.setText("Following: " + followCountResponse.getFollowingCount());
+
+        TextView followerCount = findViewById(R.id.followerCount);
+        followerCount.setText("Followers: " + followCountResponse.getFollowersCount());
+    }
+
+    @Override
+    public void handleException(Exception exception) {
+        Log.e(LOG_TAG, exception.getMessage(), exception);
+        Toast.makeText(this, "Failed to get follow counts because of exception: " + exception.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

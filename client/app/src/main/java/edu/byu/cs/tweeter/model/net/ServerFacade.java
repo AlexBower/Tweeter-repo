@@ -7,17 +7,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import edu.byu.cs.tweeter.BuildConfig;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.request.FollowCountRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
@@ -54,6 +57,27 @@ public class ServerFacade {
         //user.setImageBytes(bytes);
         User user = new User("Test", "User", request.getImageBytes());
         return new RegisterResponse(user, new AuthToken());
+    }
+
+    public FollowCountResponse getFollowCount(FollowCountRequest request) {
+        // Used in place of assert statements because Android does not support them
+        if(BuildConfig.DEBUG) {
+            if(request.getUser() == null) {
+                throw new AssertionError();
+            }
+        }
+
+        if(followeesByFollower == null) {
+            followeesByFollower = initializeFollowees();
+        }
+        int followingCount = Objects.requireNonNull(followeesByFollower.get(request.getUser())).size();
+
+        if(followersByFollowee == null) {
+            followersByFollowee = initializeFollowers();
+        }
+        int followersCount = Objects.requireNonNull(followersByFollowee.get(request.getUser())).size();
+
+        return new FollowCountResponse(followersCount, followingCount);
     }
 
     /**
@@ -217,19 +241,20 @@ public class ServerFacade {
 
         Map<User, List<User>> followersByFollowee = new HashMap<>();
 
-        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
-                0, 50, FollowGenerator.Sort.FOLLOWEE_FOLLOWER);
+        if(followeesByFollower == null) {
+            followeesByFollower = initializeFollowees();
+        }
 
-        // Populate a map of followers, keyed by followee so we can easily handle follower requests
-        for(Follow follow : follows) {
-            List<User> followers = followersByFollowee.get(follow.getFollowee());
-
-            if(followers == null) {
-                followers = new ArrayList<>();
-                followersByFollowee.put(follow.getFollowee(), followers);
+        for (Map.Entry<User, List<User>> followerToFollowees : followeesByFollower.entrySet()) {
+            User follower = followerToFollowees.getKey();
+            for (User followee : followerToFollowees.getValue()) {
+                List<User> currentList = followersByFollowee.get(followee);
+                if (currentList == null) {
+                    currentList = new ArrayList<>();
+                }
+                currentList.add(follower);
+                followersByFollowee.put(followee, currentList);
             }
-
-            followers.add(follow.getFollower());
         }
 
         return followersByFollowee;
