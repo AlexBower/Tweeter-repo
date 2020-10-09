@@ -24,10 +24,8 @@ abstract public class PaginatedFragment extends Fragment implements GetUserPrese
     protected User user;
 
     protected static final String AUTH_TOKEN_KEY = "AuthTokenKey";
-
     protected static final int LOADING_DATA_VIEW = 0;
     protected static final int ITEM_VIEW = 1;
-
     protected static final int PAGE_SIZE = 10;
 
     protected AuthToken authToken;

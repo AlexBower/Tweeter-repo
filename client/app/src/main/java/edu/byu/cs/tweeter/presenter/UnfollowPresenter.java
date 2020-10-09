@@ -18,7 +18,7 @@ public class UnfollowPresenter {
         this.view = view;
     }
 
-    public UnfollowResponse unfollow(UnfollowRequest request) throws IOException {
+    public UnfollowResponse unfollow(UnfollowRequest request) {
         UnfollowService unfollowService = getUnfollowService();
         return unfollowService.unfollow(request);
     }

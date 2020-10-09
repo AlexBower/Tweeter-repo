@@ -11,7 +11,7 @@ import edu.byu.cs.tweeter.presenter.UnfollowPresenter;
 public class UnfollowTask extends AsyncTask<UnfollowRequest, Void, UnfollowResponse> {
 
     private final UnfollowPresenter presenter;
-    private final Observer observer;
+    private final Observer[] observers;
     private Exception exception;
 
     public interface Observer {
@@ -19,13 +19,13 @@ public class UnfollowTask extends AsyncTask<UnfollowRequest, Void, UnfollowRespo
         void handleException(Exception exception);
     }
 
-    public UnfollowTask(UnfollowPresenter presenter, Observer observer) {
-        if(observer == null) {
+    public UnfollowTask(UnfollowPresenter presenter, Observer... observers) {
+        if(observers == null) {
             throw new NullPointerException();
         }
 
         this.presenter = presenter;
-        this.observer = observer;
+        this.observers = observers;
     }
 
     @Override
@@ -33,11 +33,7 @@ public class UnfollowTask extends AsyncTask<UnfollowRequest, Void, UnfollowRespo
 
         UnfollowResponse response = null;
 
-        try {
-            response = presenter.unfollow(unfollowRequests[0]);
-        } catch (IOException ex) {
-            exception = ex;
-        }
+        response = presenter.unfollow(unfollowRequests[0]);
 
         return response;
     }
@@ -45,9 +41,13 @@ public class UnfollowTask extends AsyncTask<UnfollowRequest, Void, UnfollowRespo
     @Override
     protected void onPostExecute(UnfollowResponse unfollowResponse) {
         if(exception != null) {
-            observer.handleException(exception);
+            for (Observer observer : observers) {
+                observer.handleException(exception);
+            }
         } else {
-            observer.unfollowRetrieved(unfollowResponse);
+            for (Observer observer : observers) {
+                observer.unfollowRetrieved(unfollowResponse);
+            }
         }
     }
 }

@@ -52,6 +52,7 @@ public class UserActivity extends AppCompatActivity implements
     private User user;
     private AuthToken authToken;
     private ToggleButton followButton;
+    private UserPagerAdapter userPagerAdapter;
 
     private FollowCountPresenter followCountPresenter;
     private IsFollowingPresenter isFollowingPresenter;
@@ -83,7 +84,7 @@ public class UserActivity extends AppCompatActivity implements
 
         authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
 
-        UserPagerAdapter userPagerAdapter = new UserPagerAdapter(this, getSupportFragmentManager(), user, authToken);
+        userPagerAdapter = new UserPagerAdapter(this, getSupportFragmentManager(), user, authToken);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(userPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
@@ -110,11 +111,15 @@ public class UserActivity extends AppCompatActivity implements
                 followButton.setEnabled(false);
                 if (isChecked) {
                     // The toggle is checked, follow user
-                    FollowTask followTask = new FollowTask(followPresenter, UserActivity.this);
+                    FollowTask followTask = new FollowTask(followPresenter,
+                            UserActivity.this,
+                            userPagerAdapter);
                     followTask.execute(new FollowRequest(MainActivity.loggedInUser, user));
                 } else {
                     // The toggle is checked, unfollow user
-                    UnfollowTask unfollowTask = new UnfollowTask(unfollowPresenter, UserActivity.this);
+                    UnfollowTask unfollowTask = new UnfollowTask(unfollowPresenter,
+                            UserActivity.this,
+                            userPagerAdapter);
                     unfollowTask.execute(new UnfollowRequest(MainActivity.loggedInUser, user));
                 }
             }

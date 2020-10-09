@@ -11,7 +11,7 @@ import edu.byu.cs.tweeter.presenter.FollowPresenter;
 public class FollowTask extends AsyncTask<FollowRequest, Void, FollowResponse> {
 
     private final FollowPresenter presenter;
-    private final Observer observer;
+    private final Observer[] observers;
     private Exception exception;
 
     public interface Observer {
@@ -19,13 +19,13 @@ public class FollowTask extends AsyncTask<FollowRequest, Void, FollowResponse> {
         void handleException(Exception exception);
     }
 
-    public FollowTask(FollowPresenter presenter, Observer observer) {
-        if(observer == null) {
+    public FollowTask(FollowPresenter presenter, Observer... observers) {
+        if(observers == null) {
             throw new NullPointerException();
         }
 
         this.presenter = presenter;
-        this.observer = observer;
+        this.observers = observers;
     }
 
     @Override
@@ -33,11 +33,7 @@ public class FollowTask extends AsyncTask<FollowRequest, Void, FollowResponse> {
 
         FollowResponse response = null;
 
-        try {
-            response = presenter.follow(followRequests[0]);
-        } catch (IOException ex) {
-            exception = ex;
-        }
+        response = presenter.follow(followRequests[0]);
 
         return response;
     }
@@ -45,9 +41,13 @@ public class FollowTask extends AsyncTask<FollowRequest, Void, FollowResponse> {
     @Override
     protected void onPostExecute(FollowResponse followResponse) {
         if(exception != null) {
-            observer.handleException(exception);
+            for (Observer observer : observers) {
+                observer.handleException(exception);
+            }
         } else {
-            observer.followRetrieved(followResponse);
+            for (Observer observer : observers) {
+                observer.followRetrieved(followResponse);
+            }
         }
     }
 }

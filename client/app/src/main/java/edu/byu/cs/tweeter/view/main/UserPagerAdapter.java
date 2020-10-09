@@ -12,11 +12,19 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.response.FollowResponse;
+import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
+import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
+import edu.byu.cs.tweeter.presenter.FollowPresenter;
+import edu.byu.cs.tweeter.view.asyncTasks.FollowTask;
+import edu.byu.cs.tweeter.view.asyncTasks.PostStatusTask;
+import edu.byu.cs.tweeter.view.asyncTasks.UnfollowTask;
 import edu.byu.cs.tweeter.view.main.fragments.FollowerFragment;
 import edu.byu.cs.tweeter.view.main.fragments.FollowingFragment;
 import edu.byu.cs.tweeter.view.main.fragments.StoryFragment;
 
-public class UserPagerAdapter extends FragmentPagerAdapter {
+public class UserPagerAdapter extends FragmentPagerAdapter implements
+        FollowTask.Observer, UnfollowTask.Observer {
 
     private static final int STORY_FRAGMENT_POSITION = 0;
     private static final int FOLLOWING_FRAGMENT_POSITION = 1;
@@ -58,5 +66,20 @@ public class UserPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         // Show 3 total pages.
         return 3;
+    }
+
+    @Override
+    public void followRetrieved(FollowResponse followResponse) {
+
+    }
+
+    @Override
+    public void unfollowRetrieved(UnfollowResponse unfollowResponse) {
+
+    }
+
+    @Override
+    public void handleException(Exception exception) {
+        // do nothing
     }
 }

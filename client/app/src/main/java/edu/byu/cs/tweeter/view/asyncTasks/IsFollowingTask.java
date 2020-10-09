@@ -30,15 +30,8 @@ public class IsFollowingTask extends AsyncTask<IsFollowingRequest, Void, IsFollo
 
     @Override
     protected IsFollowingResponse doInBackground(IsFollowingRequest... isFollowingRequests) {
-
         IsFollowingResponse response = null;
-
-        try {
-            response = presenter.isFollowing(isFollowingRequests[0]);
-        } catch (IOException ex) {
-            exception = ex;
-        }
-
+        response = presenter.isFollowing(isFollowingRequests[0]);
         return response;
     }
 

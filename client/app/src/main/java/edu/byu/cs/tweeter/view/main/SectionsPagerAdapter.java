@@ -11,6 +11,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
+import edu.byu.cs.tweeter.view.asyncTasks.PostStatusTask;
 import edu.byu.cs.tweeter.view.main.fragments.FeedFragment;
 import edu.byu.cs.tweeter.view.main.fragments.FollowerFragment;
 import edu.byu.cs.tweeter.view.main.fragments.FollowingFragment;
@@ -20,7 +22,8 @@ import edu.byu.cs.tweeter.view.main.fragments.StoryFragment;
  * A [FragmentPagerAdapter] that returns a fragment corresponding to one of the sections/tabs/pages
  * of the Main Activity.
  */
-class SectionsPagerAdapter extends FragmentPagerAdapter {
+class SectionsPagerAdapter extends FragmentPagerAdapter implements
+        PostStatusTask.Observer {
 
     private static final int FEED_FRAGMENT_POSITION = 0;
     private static final int STORY_FRAGMENT_POSITION = 1;
@@ -65,5 +68,15 @@ class SectionsPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         // Show 4 total pages.
         return 4;
+    }
+
+    @Override
+    public void postStatusRetrieved(PostStatusResponse postStatusResponse) {
+
+    }
+
+    @Override
+    public void handleException(Exception exception) {
+        // do nothing
     }
 }

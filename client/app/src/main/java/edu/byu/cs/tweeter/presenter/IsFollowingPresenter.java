@@ -18,7 +18,7 @@ public class IsFollowingPresenter {
         this.view = view;
     }
 
-    public IsFollowingResponse isFollowing(IsFollowingRequest request) throws IOException {
+    public IsFollowingResponse isFollowing(IsFollowingRequest request) {
         IsFollowingService isFollowingService = getIsFollowingService();
         return isFollowingService.isFollowing(request);
     }

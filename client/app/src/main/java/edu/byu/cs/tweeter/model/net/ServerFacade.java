@@ -23,6 +23,7 @@ import edu.byu.cs.tweeter.model.service.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.service.request.IsFollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.request.UnfollowRequest;
@@ -34,6 +35,7 @@ import edu.byu.cs.tweeter.model.service.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.service.response.IsFollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
+import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
@@ -555,6 +557,45 @@ public class ServerFacade {
         followersByFollowee.put(request.getOtherUser(), allFollowers);
 
         return new UnfollowResponse(true);
+    }
+
+    public PostStatusResponse postStatus(PostStatusRequest request) {
+        // Used in place of assert statements because Android does not support them
+        if(BuildConfig.DEBUG) {
+            if(request.getStatus() == null) {
+                throw new AssertionError();
+            }
+        }
+
+        if(storyByUser == null) {
+            storyByUser = initializeStories();
+        }
+        List<Status> allStatuses = storyByUser.get(request.getStatus().getUser());
+        if (allStatuses == null) {
+            allStatuses = new ArrayList<>();
+        }
+        allStatuses.remove(request.getStatus());
+        allStatuses.add(0, request.getStatus());
+        storyByUser.put(request.getStatus().getUser(), allStatuses);
+
+
+        if(feedByUser == null) {
+            feedByUser = initializeFeeds();
+        }
+        for (Map.Entry<User, List<User>> entry : followersByFollowee.entrySet()) {
+            if (entry.getValue().contains(request.getStatus().getUser())) {
+                User follower = entry.getKey();
+                List<Status> statuses = feedByUser.get(follower);
+                if (statuses == null) {
+                    statuses = new ArrayList<>();
+                }
+                statuses.add(0, request.getStatus());
+
+                feedByUser.put(follower, statuses);
+            }
+        }
+
+        return new PostStatusResponse(true);
     }
 
     /**

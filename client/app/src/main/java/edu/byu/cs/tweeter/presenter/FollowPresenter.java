@@ -18,7 +18,7 @@ public class FollowPresenter {
         this.view = view;
     }
 
-    public FollowResponse follow(FollowRequest request) throws IOException {
+    public FollowResponse follow(FollowRequest request) {
         FollowService followService = getFollowService();
         return followService.follow(request);
     }
