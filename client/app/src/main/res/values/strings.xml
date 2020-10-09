@@ -32,4 +32,6 @@
     <string name="takeProfilePicture">Take Profile Picture</string>
     <string name="logoutButton">LOGOUT</string>
     <string name="title_activity_user">UserActivity</string>
+    <string name="following">FOLLOWING</string>
+    <string name="follow">FOLLOW</string>
 </resources>

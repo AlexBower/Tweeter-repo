@@ -16,21 +16,27 @@ import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowCountRequest;
+import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.GetUserRequest;
+import edu.byu.cs.tweeter.model.service.request.IsFollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
+import edu.byu.cs.tweeter.model.service.request.UnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
+import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.GetUserResponse;
+import edu.byu.cs.tweeter.model.service.response.IsFollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
 import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
+import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
 import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
 /**
@@ -465,6 +471,90 @@ public class ServerFacade {
         }
 
         return storyByUser;
+    }
+
+    public IsFollowingResponse isFollowing(IsFollowingRequest request) {
+        // Used in place of assert statements because Android does not support them
+        if(BuildConfig.DEBUG) {
+            if(request.getCurrentUser() == null || request.getOtherUser() == null) {
+                throw new AssertionError();
+            }
+        }
+
+        if(followeesByFollower == null) {
+            followeesByFollower = initializeFollowees();
+        }
+
+        List<User> allFollowees = followeesByFollower.get(request.getCurrentUser());
+        if (allFollowees == null) {
+            return new IsFollowingResponse(false);
+        } else {
+            return new IsFollowingResponse(allFollowees.contains(request.getOtherUser()));
+        }
+    }
+
+    public FollowResponse follow(FollowRequest request) {
+        // Used in place of assert statements because Android does not support them
+        if(BuildConfig.DEBUG) {
+            if(request.getCurrentUser() == null || request.getOtherUser() == null) {
+                throw new AssertionError();
+            }
+        }
+
+        if(followeesByFollower == null) {
+            followeesByFollower = initializeFollowees();
+        }
+        List<User> allFollowees = followeesByFollower.get(request.getCurrentUser());
+        if (allFollowees == null) {
+            allFollowees = new ArrayList<>();
+        }
+        allFollowees.remove(request.getOtherUser());
+        allFollowees.add(request.getOtherUser());
+        followeesByFollower.put(request.getCurrentUser(), allFollowees);
+
+        if(followersByFollowee == null) {
+            followersByFollowee = initializeFollowers();
+        }
+        List<User> allFollowers = followersByFollowee.get(request.getOtherUser());
+        if (allFollowers == null) {
+            allFollowers = new ArrayList<>();
+        }
+        allFollowers.remove(request.getCurrentUser());
+        allFollowers.add(request.getCurrentUser());
+        followersByFollowee.put(request.getOtherUser(), allFollowers);
+
+        return new FollowResponse(true);
+    }
+
+    public UnfollowResponse unfollow(UnfollowRequest request) {
+        // Used in place of assert statements because Android does not support them
+        if(BuildConfig.DEBUG) {
+            if(request.getCurrentUser() == null || request.getOtherUser() == null) {
+                throw new AssertionError();
+            }
+        }
+
+        if(followeesByFollower == null) {
+            followeesByFollower = initializeFollowees();
+        }
+        List<User> allFollowees = followeesByFollower.get(request.getCurrentUser());
+        if (allFollowees == null) {
+            allFollowees = new ArrayList<>();
+        }
+        allFollowees.remove(request.getOtherUser());
+        followeesByFollower.put(request.getCurrentUser(), allFollowees);
+
+        if(followersByFollowee == null) {
+            followersByFollowee = initializeFollowers();
+        }
+        List<User> allFollowers = followersByFollowee.get(request.getOtherUser());
+        if (allFollowers == null) {
+            allFollowers = new ArrayList<>();
+        }
+        allFollowers.remove(request.getCurrentUser());
+        followersByFollowee.put(request.getOtherUser(), allFollowers);
+
+        return new UnfollowResponse(true);
     }
 
     /**

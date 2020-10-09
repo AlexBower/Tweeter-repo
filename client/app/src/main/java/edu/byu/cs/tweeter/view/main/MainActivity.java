@@ -47,7 +47,7 @@ public class MainActivity
 
     private FollowCountPresenter followCountPresenter;
     private LogoutPresenter logoutPresenter;
-    public static User user;
+    public static User loggedInUser;
     private AuthToken authToken;
 
     public static Intent newIntent(Context packageContext, User user, AuthToken authToken) {
@@ -66,14 +66,14 @@ public class MainActivity
         followCountPresenter = new FollowCountPresenter(this);
         logoutPresenter = new LogoutPresenter(this);
 
-        user = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
-        if(user == null) {
+        loggedInUser = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
+        if(loggedInUser == null) {
             throw new RuntimeException("User not passed to activity");
         }
 
         authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), user, authToken);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), loggedInUser, authToken);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
@@ -96,18 +96,18 @@ public class MainActivity
             @Override
             public void onClick(View v) {
                 LogoutTask logoutTask = new LogoutTask(logoutPresenter, MainActivity.this);
-                logoutTask.execute(new LogoutRequest(user, authToken));
+                logoutTask.execute(new LogoutRequest(loggedInUser, authToken));
             }
         });
 
         TextView userName = findViewById(R.id.userName);
-        userName.setText(user.getName());
+        userName.setText(loggedInUser.getName());
 
         TextView userAlias = findViewById(R.id.userAlias);
-        userAlias.setText(user.getAlias());
+        userAlias.setText(loggedInUser.getAlias());
 
         ImageView userImageView = findViewById(R.id.userImage);
-        userImageView.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
+        userImageView.setImageDrawable(ImageUtils.drawableFromByteArray(loggedInUser.getImageBytes()));
 
         TextView followeeCount = findViewById(R.id.followeeCount);
         followeeCount.setText("Following: ");
@@ -120,7 +120,7 @@ public class MainActivity
     protected void onResume() {
         super.onResume();
         GetFollowCountTask getFollowCountTask = new GetFollowCountTask(followCountPresenter, this);
-        getFollowCountTask.execute(new FollowCountRequest(user));
+        getFollowCountTask.execute(new FollowCountRequest(loggedInUser));
     }
 
     @Override

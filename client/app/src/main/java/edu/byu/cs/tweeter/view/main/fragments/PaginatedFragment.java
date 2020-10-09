@@ -2,12 +2,8 @@ package edu.byu.cs.tweeter.view.main.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -46,10 +42,10 @@ abstract public class PaginatedFragment extends Fragment implements GetUserPrese
 
     protected void userClicked(String userAlias) {
         if (userAlias != null) {
-            if (userAlias.equals(MainActivity.user.getAlias())) {
+            if (userAlias.equals(MainActivity.loggedInUser.getAlias())) {
                 startActivity(MainActivity.newIntent(
                         getContext(),
-                        MainActivity.user,
+                        MainActivity.loggedInUser,
                         authToken));
                 return;
             }

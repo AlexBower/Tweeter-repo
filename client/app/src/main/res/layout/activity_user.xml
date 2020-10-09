@@ -79,11 +79,22 @@
                         android:paddingHorizontal="5sp" />
 
                 </LinearLayout>
-
+                
             </LinearLayout>
 
         </RelativeLayout>
 
+        <ToggleButton
+            android:id="@+id/followButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:checked="false"
+            android:textOff="@string/follow"
+            android:textOn="@string/following"
+            android:background="@drawable/follow_button_toggle_background"
+            android:textColor="@color/black"
+            android:enabled="false" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
