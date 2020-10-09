@@ -82,7 +82,7 @@ public class LoginFragment extends Fragment implements LoginPresenter.View, Logi
             }
         });
 
-        Button loginButton = view.findViewById(R.id.LoginButton);
+        Button loginButton = view.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             /**
              * Makes a login request. The user is hard-coded, so it doesn't matter what data we put

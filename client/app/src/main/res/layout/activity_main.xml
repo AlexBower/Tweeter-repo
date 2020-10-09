@@ -12,19 +12,34 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="?actionBarSize"
-            android:padding="@dimen/appbar_padding"
-            android:text="@string/app_name"
-            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minHeight="?actionBarSize"
+                android:padding="@dimen/appbar_padding"
+                android:text="@string/app_name"
+                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+
+            <Button
+                android:id="@+id/logoutButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/logoutButton"
+                android:background="@color/colorPrimary" >
+            </Button>
+
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" >
 
             <ImageView
                 android:id="@+id/userImage"
@@ -39,44 +54,44 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_toEndOf="@+id/userImage"
-                android:layout_centerVertical="true">
+                android:layout_centerVertical="true" >
 
                 <TextView
                     android:id="@+id/userName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/homePageTitle"
-                    android:textSize="24sp"/>
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/userAlias"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/homePageTitle"
-                    android:textSize="24sp"/>
+                    android:textSize="24sp" />
 
                 <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal" >
 
                     <TextView
                             android:id="@+id/followeeCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/followeeCount"
-                            android:paddingHorizontal="5sp"/>
+                            android:paddingHorizontal="5sp" />
 
                     <Space
                             android:layout_width="5sp"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
 
                     <TextView
                             android:id="@+id/followerCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/followerCount"
-                            android:paddingHorizontal="5sp"/>
+                            android:paddingHorizontal="5sp" />
 
                 </LinearLayout>
 
@@ -109,4 +124,4 @@
         app:backgroundTint="@color/white"
         app:srcCompat="@drawable/feather" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout >

@@ -30,4 +30,5 @@
     <string name="firstNameHint">first name</string>
     <string name="lastNameHint">last name</string>
     <string name="takeProfilePicture">Take Profile Picture</string>
+    <string name="logoutButton">LOGOUT</string>
 </resources>
