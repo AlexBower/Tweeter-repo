@@ -2,6 +2,7 @@ package edu.byu.cs.tweeter.model.net;
 
 import android.annotation.SuppressLint;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowCountRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
@@ -24,10 +26,12 @@ import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.service.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
 import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
+import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -63,7 +67,28 @@ public class ServerFacade {
     public RegisterResponse register(RegisterRequest request) {
         //byte [] bytes = ByteArrayUtils.bytesFromUrl(request.getImageUrl());
         //user.setImageBytes(bytes);
-        User user = new User("Test", "User", request.getImageBytes());
+        // Used in place of assert statements because Android does not support them
+        byte [] image = request.getImageBytes();
+        if (image == null) {
+            try {
+                image = ByteArrayUtils.bytesFromUrl("https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (request.getUsername() == null ||
+                request.getFirstName() == null ||
+                request.getLastName() == null ||
+                request.getPassword() == null) {
+            return new RegisterResponse("Please fill in all fields");
+        }
+
+        if (!request.getUsername().startsWith("@")) {
+            request.setUsername(String.format("@%s", request.getUsername()));
+        }
+
+        User user = new User(request.getFirstName(), request.getLastName(), request.getUsername(), image);
         return new RegisterResponse(user, new AuthToken());
     }
 
@@ -78,14 +103,45 @@ public class ServerFacade {
         if(followeesByFollower == null) {
             followeesByFollower = initializeFollowees();
         }
-        int followingCount = Objects.requireNonNull(followeesByFollower.get(request.getUser())).size();
+        int followingCount = 0;
+        if (followeesByFollower.get(request.getUser()) != null) {
+            followingCount = (Objects.requireNonNull(followeesByFollower.get(request.getUser()))).size();
+        }
 
         if(followersByFollowee == null) {
             followersByFollowee = initializeFollowers();
         }
-        int followersCount = Objects.requireNonNull(followersByFollowee.get(request.getUser())).size();
+        int followersCount = 0;
+        if (followersByFollowee.get(request.getUser()) != null) {
+            followersCount = Objects.requireNonNull(followersByFollowee.get(request.getUser())).size();
+        }
 
         return new FollowCountResponse(followersCount, followingCount);
+    }
+
+    public GetUserResponse getUser(GetUserRequest request) {
+        // Used in place of assert statements because Android does not support them
+        if(BuildConfig.DEBUG) {
+            if(request.getUsername() == null) {
+                throw new AssertionError();
+            }
+        }
+
+        if(followeesByFollower == null) {
+            followeesByFollower = initializeFollowees();
+        }
+
+        if(followersByFollowee == null) {
+            followersByFollowee = initializeFollowers();
+        }
+
+        for (Map.Entry<User, List<User>> followerToFollowees : followeesByFollower.entrySet()) {
+            User follower = followerToFollowees.getKey();
+            if (follower.getAlias().equals(request.getUsername())) {
+                return new GetUserResponse(follower);
+            }
+        }
+        return new GetUserResponse("Exception: Cannot find user '" + request.getUsername() + "'");
     }
 
     /**
@@ -124,7 +180,7 @@ public class ServerFacade {
             if (allFollowees != null) {
                 int followeesIndex = getFolloweesStartingIndex(request.getLastFollowee(), allFollowees);
 
-                for(int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
+                for (int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
                     responseFollowees.add(allFollowees.get(followeesIndex));
                 }
 

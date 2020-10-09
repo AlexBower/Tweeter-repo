@@ -101,7 +101,7 @@ abstract public class StatusFragment extends PaginatedFragment {
                         ClickableSpan clickableSpan = new ClickableSpan() {
                             @Override
                             public void onClick(View widget) {
-                                Toast.makeText(getContext(), "USER MENTION: " + string, Toast.LENGTH_SHORT).show();
+                                userClicked(string);
                             }
                         };
                         spannableString.setSpan(clickableSpan, startIndex,startIndex + string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

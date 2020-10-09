@@ -25,8 +25,8 @@ public class User implements Comparable<User>, Serializable {
         this.imageUrl = imageURL;
     }
 
-    public User(String firstName, String lastName, byte[] imageBytes) {
-        this(firstName, lastName, "");
+    public User(String firstName, String lastName, String alias, byte[] imageBytes) {
+        this(firstName, lastName, alias, "");
         this.imageBytes = imageBytes;
     }
 
