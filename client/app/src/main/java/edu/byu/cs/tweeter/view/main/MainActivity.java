@@ -20,37 +20,48 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowCountRequest;
+import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
+import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
 import edu.byu.cs.tweeter.presenter.FollowCountPresenter;
+import edu.byu.cs.tweeter.presenter.LogoutPresenter;
+import edu.byu.cs.tweeter.view.LoginActivity;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowCountTask;
+import edu.byu.cs.tweeter.view.asyncTasks.LogoutTask;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 /**
  * The main activity for the application. Contains tabs for feed, story, following, and followers.
  */
-public class MainActivity extends AppCompatActivity implements FollowCountPresenter.View, GetFollowCountTask.Observer {
+public class MainActivity
+        extends AppCompatActivity
+        implements FollowCountPresenter.View, GetFollowCountTask.Observer,
+            LogoutPresenter.View, LogoutTask.Observer {
 
     private static final String LOG_TAG = "MainActivity";
 
     public static final String CURRENT_USER_KEY = "CurrentUser";
     public static final String AUTH_TOKEN_KEY = "AuthTokenKey";
 
-    private FollowCountPresenter presenter;
+    private FollowCountPresenter followCountPresenter;
+    private LogoutPresenter logoutPresenter;
     private User user;
+    private AuthToken authToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        presenter = new FollowCountPresenter(this);
+        followCountPresenter = new FollowCountPresenter(this);
+        logoutPresenter = new LogoutPresenter(this);
 
         user = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
         if(user == null) {
             throw new RuntimeException("User not passed to activity");
         }
 
-        AuthToken authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
+        authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), user, authToken);
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -74,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements FollowCountPresen
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Logout successful!", Toast.LENGTH_LONG).show();
-                finish();
+                LogoutTask logoutTask = new LogoutTask(logoutPresenter, MainActivity.this);
+                logoutTask.execute(new LogoutRequest(user, authToken));
             }
         });
 
@@ -98,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements FollowCountPresen
     @Override
     protected void onResume() {
         super.onResume();
-        GetFollowCountTask getFollowCountTask = new GetFollowCountTask(presenter, this);
+        GetFollowCountTask getFollowCountTask = new GetFollowCountTask(followCountPresenter, this);
         getFollowCountTask.execute(new FollowCountRequest(user));
     }
 
@@ -109,6 +120,12 @@ public class MainActivity extends AppCompatActivity implements FollowCountPresen
 
         TextView followerCount = findViewById(R.id.followerCount);
         followerCount.setText("Followers: " + followCountResponse.getFollowersCount());
+    }
+
+    @Override
+    public void logoutRetrieved(LogoutResponse logoutResponse) {
+        Toast.makeText(this, "Logout successful!", Toast.LENGTH_LONG).show();
+        startActivity(LoginActivity.newIntent(this));
     }
 
     @Override

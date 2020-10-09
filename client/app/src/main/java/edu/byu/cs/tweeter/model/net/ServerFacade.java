@@ -18,12 +18,14 @@ import edu.byu.cs.tweeter.model.service.request.FollowCountRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
+import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
+import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
 import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 
@@ -37,6 +39,12 @@ public class ServerFacade {
     private static Map<User, List<User>> followersByFollowee;
     private static Map<User, List<Status>> storyByUser;
     private static Map<User, List<Status>> feedByUser;
+
+    public LogoutResponse logout(LogoutRequest request) {
+
+        return new LogoutResponse(true);
+
+    }
 
     /**
      * Performs a login and if successful, returns the logged in user and an auth token. The current

@@ -3,6 +3,7 @@ package edu.byu.cs.tweeter.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,12 @@ import edu.byu.cs.tweeter.view.main.MainActivity;
  * of this should be replaced when the back-end is implemented.
  */
 public class LoginActivity extends AppCompatActivity {
+
+    public static Intent newIntent(Context packageContext) {
+        Intent intent = new Intent(packageContext, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
