@@ -6,11 +6,11 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
-import edu.byu.cs.tweeter.presenter.FollowPresenter;
+import edu.byu.cs.tweeter.presenter.UserPresenter;
 
 public class FollowTask extends AsyncTask<FollowRequest, Void, FollowResponse> {
 
-    private final FollowPresenter presenter;
+    private final UserPresenter presenter;
     private final Observer[] observers;
     private Exception exception;
 
@@ -19,7 +19,7 @@ public class FollowTask extends AsyncTask<FollowRequest, Void, FollowResponse> {
         void handleException(Exception exception);
     }
 
-    public FollowTask(FollowPresenter presenter, Observer... observers) {
+    public FollowTask(UserPresenter presenter, Observer... observers) {
         if(observers == null) {
             throw new NullPointerException();
         }

@@ -8,14 +8,12 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.RequiresApi;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,9 +34,7 @@ import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
-import edu.byu.cs.tweeter.presenter.FollowCountPresenter;
-import edu.byu.cs.tweeter.presenter.LogoutPresenter;
-import edu.byu.cs.tweeter.presenter.PostStatusPresenter;
+import edu.byu.cs.tweeter.presenter.MainPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.PostStatusTask;
 import edu.byu.cs.tweeter.view.login.LoginActivity;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowCountTask;
@@ -49,18 +45,14 @@ import edu.byu.cs.tweeter.view.util.ImageUtils;
  * The main activity for the application. Contains tabs for feed, story, following, and followers.
  */
 public class MainActivity extends AppCompatActivity implements
-        FollowCountPresenter.View, GetFollowCountTask.Observer,
-        LogoutPresenter.View, LogoutTask.Observer,
-        PostStatusPresenter.View, PostStatusTask.Observer {
+        MainPresenter.View, GetFollowCountTask.Observer, LogoutTask.Observer, PostStatusTask.Observer {
 
     private static final String LOG_TAG = "MainActivity";
 
     public static final String CURRENT_USER_KEY = "CurrentUser";
     public static final String AUTH_TOKEN_KEY = "AuthTokenKey";
 
-    private FollowCountPresenter followCountPresenter;
-    private LogoutPresenter logoutPresenter;
-    private PostStatusPresenter postStatusPresenter;
+    private MainPresenter presenter;
     public static User loggedInUser;
     private AuthToken authToken;
     private SectionsPagerAdapter sectionsPagerAdapter;
@@ -78,9 +70,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        followCountPresenter = new FollowCountPresenter(this);
-        logoutPresenter = new LogoutPresenter(this);
-        postStatusPresenter = new PostStatusPresenter(this);
+        presenter = new MainPresenter(this);
 
         loggedInUser = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
         if(loggedInUser == null) {
@@ -119,10 +109,7 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String newPostText = input.getText().toString();
-                        PostStatusTask postStatusTask = new PostStatusTask(
-                                postStatusPresenter,
-                                MainActivity.this,
-                                sectionsPagerAdapter);
+                        PostStatusTask postStatusTask = new PostStatusTask(presenter, MainActivity.this, sectionsPagerAdapter);
                         postStatusTask.execute(new PostStatusRequest(
                                 new Status(newPostText, LocalDateTime.now(), loggedInUser)));
                     }
@@ -142,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogoutTask logoutTask = new LogoutTask(logoutPresenter, MainActivity.this);
+                LogoutTask logoutTask = new LogoutTask(presenter, MainActivity.this);
                 logoutTask.execute(new LogoutRequest(loggedInUser, authToken));
             }
         });
@@ -166,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        GetFollowCountTask getFollowCountTask = new GetFollowCountTask(followCountPresenter, this);
+        GetFollowCountTask getFollowCountTask = new GetFollowCountTask(presenter, this);
         getFollowCountTask.execute(new FollowCountRequest(loggedInUser));
     }
 

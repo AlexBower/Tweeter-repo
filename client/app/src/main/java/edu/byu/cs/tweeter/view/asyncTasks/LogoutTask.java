@@ -6,11 +6,11 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
-import edu.byu.cs.tweeter.presenter.LogoutPresenter;
+import edu.byu.cs.tweeter.presenter.MainPresenter;
 
 public class LogoutTask extends AsyncTask<LogoutRequest, Void, LogoutResponse> {
 
-    private final LogoutPresenter presenter;
+    private final MainPresenter presenter;
     private final Observer observer;
     private Exception exception;
 
@@ -20,7 +20,7 @@ public class LogoutTask extends AsyncTask<LogoutRequest, Void, LogoutResponse> {
         void handleException(Exception exception);
     }
 
-    public LogoutTask(LogoutPresenter presenter, Observer observer) {
+    public LogoutTask(MainPresenter presenter, Observer observer) {
         if (observer == null) {
             throw new NullPointerException();
         }

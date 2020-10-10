@@ -4,11 +4,11 @@ import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
-import edu.byu.cs.tweeter.presenter.PostStatusPresenter;
+import edu.byu.cs.tweeter.presenter.MainPresenter;
 
 public class PostStatusTask extends AsyncTask<PostStatusRequest, Void, PostStatusResponse> {
 
-    private final PostStatusPresenter presenter;
+    private final MainPresenter presenter;
     private final Observer[] observers;
     private Exception exception;
 
@@ -17,7 +17,7 @@ public class PostStatusTask extends AsyncTask<PostStatusRequest, Void, PostStatu
         void handleException(Exception exception);
     }
 
-    public PostStatusTask(PostStatusPresenter presenter, Observer... observers) {
+    public PostStatusTask(MainPresenter presenter, Observer... observers) {
         if(observers == null) {
             throw new NullPointerException();
         }

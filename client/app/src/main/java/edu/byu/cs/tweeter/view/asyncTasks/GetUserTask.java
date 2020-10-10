@@ -8,12 +8,12 @@ import java.io.IOException;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.service.response.GetUserResponse;
-import edu.byu.cs.tweeter.presenter.GetUserPresenter;
+import edu.byu.cs.tweeter.presenter.PaginatedPresenter;
 import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
 public class GetUserTask extends AsyncTask<GetUserRequest, Void, GetUserResponse> {
 
-    private final GetUserPresenter presenter;
+    private final PaginatedPresenter presenter;
     private final Observer observer;
     private Exception exception;
 
@@ -27,7 +27,7 @@ public class GetUserTask extends AsyncTask<GetUserRequest, Void, GetUserResponse
         void handleException(Exception ex);
     }
 
-    public GetUserTask(GetUserPresenter presenter, Observer observer) {
+    public GetUserTask(PaginatedPresenter presenter, Observer observer) {
         if(observer == null) {
             throw new NullPointerException();
         }

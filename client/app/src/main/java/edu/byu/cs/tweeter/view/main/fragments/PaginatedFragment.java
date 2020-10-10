@@ -11,12 +11,12 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.service.response.GetUserResponse;
-import edu.byu.cs.tweeter.presenter.GetUserPresenter;
+import edu.byu.cs.tweeter.presenter.PaginatedPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetUserTask;
 import edu.byu.cs.tweeter.view.main.MainActivity;
 import edu.byu.cs.tweeter.view.main.UserActivity;
 
-abstract public class PaginatedFragment extends Fragment implements GetUserPresenter.View, GetUserTask.Observer {
+abstract public class PaginatedFragment extends Fragment implements PaginatedPresenter.View, GetUserTask.Observer {
     private static final String LOG_TAG = "PaginatedFragment";
 
     protected static final String USER_KEY = "UserKey";
@@ -30,12 +30,12 @@ abstract public class PaginatedFragment extends Fragment implements GetUserPrese
 
     protected AuthToken authToken;
 
-    GetUserPresenter getUserPresenter;
+    PaginatedPresenter mPaginatedPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getUserPresenter = new GetUserPresenter(this);
+        mPaginatedPresenter = new PaginatedPresenter(this);
     }
 
     protected void userClicked(String userAlias) {
@@ -47,7 +47,7 @@ abstract public class PaginatedFragment extends Fragment implements GetUserPrese
                         authToken));
                 return;
             }
-            GetUserTask getUserTask = new GetUserTask(getUserPresenter, this);
+            GetUserTask getUserTask = new GetUserTask(mPaginatedPresenter, this);
             getUserTask.execute(new GetUserRequest(userAlias));
         }
     }

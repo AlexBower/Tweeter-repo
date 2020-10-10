@@ -7,6 +7,7 @@ import java.io.IOException;
 import edu.byu.cs.tweeter.model.service.request.FollowCountRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
 import edu.byu.cs.tweeter.presenter.FollowCountPresenter;
+import edu.byu.cs.tweeter.presenter.MainPresenter;
 
 public class GetFollowCountTask extends AsyncTask<FollowCountRequest, Void, FollowCountResponse> {
 

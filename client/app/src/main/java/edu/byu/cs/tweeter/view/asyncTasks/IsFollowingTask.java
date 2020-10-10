@@ -2,15 +2,13 @@ package edu.byu.cs.tweeter.view.asyncTasks;
 
 import android.os.AsyncTask;
 
-import java.io.IOException;
-
 import edu.byu.cs.tweeter.model.service.request.IsFollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.IsFollowingResponse;
-import edu.byu.cs.tweeter.presenter.IsFollowingPresenter;
+import edu.byu.cs.tweeter.presenter.UserPresenter;
 
 public class IsFollowingTask extends AsyncTask<IsFollowingRequest, Void, IsFollowingResponse> {
 
-    private final IsFollowingPresenter presenter;
+    private final UserPresenter presenter;
     private final Observer observer;
     private Exception exception;
 
@@ -19,7 +17,7 @@ public class IsFollowingTask extends AsyncTask<IsFollowingRequest, Void, IsFollo
         void handleException(Exception exception);
     }
 
-    public IsFollowingTask(IsFollowingPresenter presenter, Observer observer) {
+    public IsFollowingTask(UserPresenter presenter, Observer observer) {
         if(observer == null) {
             throw new NullPointerException();
         }
