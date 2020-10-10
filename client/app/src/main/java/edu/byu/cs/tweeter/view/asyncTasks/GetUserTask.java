@@ -42,24 +42,11 @@ public class GetUserTask extends AsyncTask<GetUserRequest, Void, GetUserResponse
 
         try {
             getUserResponse = presenter.getUser(getUserRequests[0]);
-
-            if(getUserResponse.isSuccess()) {
-                loadImage(getUserResponse.getUser());
-            }
         } catch (IOException ex) {
             exception = ex;
         }
 
         return getUserResponse;
-    }
-
-    private void loadImage(User user) {
-        try {
-            byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
-            user.setImageBytes(bytes);
-        } catch (IOException e) {
-            Log.e(this.getClass().getName(), e.toString(), e);
-        }
     }
 
     @Override

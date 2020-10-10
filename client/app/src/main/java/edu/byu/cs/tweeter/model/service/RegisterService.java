@@ -22,6 +22,9 @@ public class RegisterService {
     }
 
     private void loadImage(User user) throws IOException {
+        if (user.getImageBytes() != null) {
+            return;
+        }
         if (!user.getImageUrl().equals("")) {
             byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
             user.setImageBytes(bytes);

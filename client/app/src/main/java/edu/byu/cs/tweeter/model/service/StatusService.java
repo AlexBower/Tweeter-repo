@@ -32,6 +32,9 @@ public class StatusService {
 
     private void loadImages(StatusResponse response) throws IOException {
         for(Status status : response.getStatuses()) {
+            if (status.getUser().getImageBytes() != null) {
+                continue;
+            }
             byte [] bytes = ByteArrayUtils.bytesFromUrl(status.getUser().getImageUrl());
             status.getUser().setImageBytes(bytes);
         }

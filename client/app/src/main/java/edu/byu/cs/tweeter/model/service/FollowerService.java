@@ -12,16 +12,17 @@ public class FollowerService {
 
     public FollowerResponse getFollowers(FollowerRequest request) throws IOException {
         FollowerResponse response = getServerFacade().getFollowers(request);
-
         if(response.isSuccess()) {
             loadImages(response);
         }
-
         return response;
     }
 
     private void loadImages(FollowerResponse response) throws IOException {
         for(User user : response.getFollowers()) {
+            if (user.getImageBytes() != null) {
+                continue;
+            }
             byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
             user.setImageBytes(bytes);
         }

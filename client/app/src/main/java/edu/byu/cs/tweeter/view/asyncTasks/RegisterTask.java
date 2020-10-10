@@ -38,26 +38,11 @@ public class RegisterTask extends AsyncTask<RegisterRequest, Void, RegisterRespo
 
         try {
             registerResponse = presenter.register(registerRequests[0]);
-
-            if(registerResponse.isSuccess()) {
-                loadImage(registerResponse.getUser());
-            }
         } catch (IOException ex) {
             exception = ex;
         }
 
         return registerResponse;
-    }
-
-    private void loadImage(User user) {
-        if (!user.getImageUrl().equals("")) {
-            try {
-                byte[] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
-                user.setImageBytes(bytes);
-            } catch (IOException e) {
-                Log.e(this.getClass().getName(), e.toString(), e);
-            }
-        }
     }
 
     @Override
