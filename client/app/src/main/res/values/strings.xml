@@ -34,4 +34,8 @@
     <string name="title_activity_user">UserActivity</string>
     <string name="following">FOLLOWING</string>
     <string name="follow">FOLLOW</string>
+    <string name="postStatus">POST STATUS</string>
+    <string name="cancel">CANCEL</string>
+    <string name="postMessageHint">What\'s on your mind?</string>
+    <string name="post_a_new_status">Post a new status</string>
 </resources>

@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,16 +53,6 @@ abstract public class StatusFragment extends PaginatedFragment {
             userName = itemView.findViewById(R.id.userName);
             statusTime = itemView.findViewById(R.id.statusTime);
             statusMessage = itemView.findViewById(R.id.statusMessage);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (userName != null) {
-                        Toast.makeText(getContext(), "You selected '" + userName.getText() + "'. " +
-                                statusMessage.getText() + " from " + statusTime.getText(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
         }
 
         @SuppressLint("NewApi")

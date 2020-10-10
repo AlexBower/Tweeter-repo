@@ -1,6 +1,8 @@
 package edu.byu.cs.tweeter.view.main;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,9 +15,11 @@ import androidx.annotation.RequiresApi;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -99,14 +103,38 @@ public class MainActivity extends AppCompatActivity implements
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                PostStatusTask postStatusTask = new PostStatusTask(
-                        postStatusPresenter,
-                        MainActivity.this,
-                        sectionsPagerAdapter);
-                postStatusTask.execute(new PostStatusRequest(
-                        new Status("TEST STATUS", LocalDateTime.now(), loggedInUser)));
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                View dialogView = getLayoutInflater().inflate(R.layout.post_dialog, null);
+                builder.setView(dialogView);
+
+                ImageView imageView = dialogView.findViewById(R.id.userImagePost);
+                imageView.setImageDrawable(ImageUtils.drawableFromByteArray(loggedInUser.getImageBytes()));
+                TextView userNamePost = dialogView.findViewById(R.id.userNamePost);
+                userNamePost.setText(loggedInUser.getFirstName() + " " + loggedInUser.getLastName());
+                TextView userAliasPost = dialogView.findViewById(R.id.userAliasPost);
+                userAliasPost.setText(loggedInUser.getAlias());
+                EditText input = dialogView.findViewById(R.id.messagePost);
+
+                builder.setPositiveButton(R.string.postStatus, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newPostText = input.getText().toString();
+                        PostStatusTask postStatusTask = new PostStatusTask(
+                                postStatusPresenter,
+                                MainActivity.this,
+                                sectionsPagerAdapter);
+                        postStatusTask.execute(new PostStatusRequest(
+                                new Status(newPostText, LocalDateTime.now(), loggedInUser)));
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
             }
         });
 
