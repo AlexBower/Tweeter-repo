@@ -6,9 +6,19 @@ import edu.byu.cs.tweeter.model.service.FollowCountService;
 import edu.byu.cs.tweeter.model.service.request.FollowCountRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
 
-abstract public class FollowCountPresenter {
+public class FollowCountPresenter {
 
-    public FollowCountResponse getFollowCount(FollowCountRequest request) throws IOException {
+    private final View view;
+
+    protected FollowCountPresenter(View view) {
+        this.view = view;
+    }
+
+    public interface View {
+        // If needed, specify methods here that will be called on the view in response to model updates
+    }
+
+    public FollowCountResponse getFollowCount(FollowCountRequest request) {
         FollowCountService followCountService = getFollowCountService();
         return followCountService.getFollowCount(request);
     }

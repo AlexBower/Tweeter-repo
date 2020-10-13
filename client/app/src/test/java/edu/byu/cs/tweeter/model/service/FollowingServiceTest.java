@@ -47,7 +47,7 @@ public class FollowingServiceTest {
         ServerFacade mockServerFacade = Mockito.mock(ServerFacade.class);
         Mockito.when(mockServerFacade.getFollowees(validRequest)).thenReturn(successResponse);
 
-        failureResponse = new FollowingResponse("An exception occured");
+        failureResponse = new FollowingResponse("An exception occurred");
         Mockito.when(mockServerFacade.getFollowees(invalidRequest)).thenReturn(failureResponse);
 
         // Create a FollowingService instance and wrap it with a spy that will use the mock service

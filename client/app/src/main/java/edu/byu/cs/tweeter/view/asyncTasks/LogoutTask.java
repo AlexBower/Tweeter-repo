@@ -31,14 +31,8 @@ public class LogoutTask extends AsyncTask<LogoutRequest, Void, LogoutResponse> {
 
     @Override
     protected LogoutResponse doInBackground(LogoutRequest... logoutRequests) {
-
         LogoutResponse response = null;
-
-        try {
-            response = presenter.logout(logoutRequests[0]);
-        } catch (IOException ex) {
-            exception = ex;
-        }
+        response = presenter.logout(logoutRequests[0]);
 
         return response;
     }

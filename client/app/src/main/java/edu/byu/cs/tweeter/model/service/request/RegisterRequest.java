@@ -11,8 +11,8 @@ public class RegisterRequest extends LoginRequest {
      *
      * @param firstName
      * @param lastName
-     * @param username the username of the user to be logged in.
-     * @param password the password of the user to be logged in.
+     * @param username the username of the user to be registered.
+     * @param password the password of the user to be registered in.
      */
     public RegisterRequest(String username, String password, String firstName, String lastName, byte [] imageBytes) {
         super(username, password);

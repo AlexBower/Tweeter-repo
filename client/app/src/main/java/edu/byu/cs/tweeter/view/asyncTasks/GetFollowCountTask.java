@@ -34,11 +34,7 @@ public class GetFollowCountTask extends AsyncTask<FollowCountRequest, Void, Foll
 
         FollowCountResponse response = null;
 
-        try {
-            response = presenter.getFollowCount(followCountRequests[0]);
-        } catch (IOException ex) {
-            exception = ex;
-        }
+        response = presenter.getFollowCount(followCountRequests[0]);
 
         return response;
     }

@@ -19,6 +19,8 @@ public class UserPresenter extends FollowCountPresenter{
     }
 
     public UserPresenter(View view) {
+        super(new FollowCountPresenter.View() {
+        });
         this.view = view;
     }
 
