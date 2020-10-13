@@ -53,7 +53,7 @@ public class LoginServiceTest {
     }
 
     @Test
-    public void testLogin_validRequest_loadsProfileImages() throws IOException {
+    public void testLogin_validRequest_loadsProfileImage() throws IOException {
         LoginResponse response = loginServiceSpy.login(validRequest);
 
         Assertions.assertNotNull(response.getUser().getImageBytes());

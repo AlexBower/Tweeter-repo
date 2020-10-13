@@ -21,7 +21,9 @@ public class PaginatedPresenter {
     }
 
     public GetUserResponse getUser(GetUserRequest getUserRequest) throws IOException {
-        GetUserService getUserService = new GetUserService();
+        GetUserService getUserService = getGetUserService();
         return getUserService.getUser(getUserRequest);
     }
+
+    GetUserService getGetUserService() { return new GetUserService(); }
 }

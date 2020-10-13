@@ -61,7 +61,7 @@ public class RegisterServiceTest {
     }
 
     @Test
-    public void testRegister_validRequest_loadsProfileImages() throws IOException {
+    public void testRegister_validRequest_loadsProfileImage() throws IOException {
         RegisterResponse response = registerServiceSpy.register(validRequest);
 
         Assertions.assertNotNull(response.getUser().getImageBytes());
