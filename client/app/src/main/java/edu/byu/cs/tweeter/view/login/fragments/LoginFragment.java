@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.view.login.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
