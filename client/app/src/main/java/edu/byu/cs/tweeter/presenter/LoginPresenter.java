@@ -2,7 +2,9 @@ package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.LoginService;
+import edu.byu.cs.tweeter.model.service.LoginServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 
@@ -34,10 +36,10 @@ public class LoginPresenter {
      *
      * @param loginRequest the request.
      */
-    public LoginResponse login(LoginRequest loginRequest) throws IOException {
+    public LoginResponse login(LoginRequest loginRequest) throws IOException, TweeterRemoteException {
         LoginService loginService = getLoginService();
         return loginService.login(loginRequest);
     }
 
-    LoginService getLoginService() { return new LoginService(); }
+    LoginServiceProxy getLoginService() { return new LoginServiceProxy(); }
 }

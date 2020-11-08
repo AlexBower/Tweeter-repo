@@ -55,7 +55,7 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
 
         try {
             loginResponse = presenter.login(loginRequests[0]);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             exception = ex;
         }
 

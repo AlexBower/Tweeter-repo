@@ -9,7 +9,6 @@ import java.util.Random;
 import java.util.Set;
 
 import edu.byu.cs.tweeter.BuildConfig;
-import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
 
 /**

@@ -11,7 +11,7 @@ public class PostStatusService {
         return serverFacade.postStatus(request);
     }
 
-    ServerFacade getServerFacade() {
+    public ServerFacade getServerFacade() {
         return new ServerFacade();
     }
 }

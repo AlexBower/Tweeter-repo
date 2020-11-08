@@ -11,7 +11,7 @@ public class IsFollowingService {
         return serverFacade.isFollowing(request);
     }
 
-    ServerFacade getServerFacade() {
+    public ServerFacade getServerFacade() {
         return new ServerFacade();
     }
 }

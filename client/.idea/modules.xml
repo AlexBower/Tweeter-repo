@@ -4,6 +4,11 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Tweeter.iml" filepath="$PROJECT_DIR$/Tweeter.iml" group="Tweeter" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Tweeter/app" />
+      <module fileurl="file://$PROJECT_DIR$/backend/backend.iml" filepath="$PROJECT_DIR$/backend/backend.iml" group="Tweeter/backend" />
+      <module fileurl="file://$PROJECT_DIR$/client-Tweeter.iml" filepath="$PROJECT_DIR$/client-Tweeter.iml" group="Tweeter" />
+      <module fileurl="file://$PROJECT_DIR$/app/client-app.iml" filepath="$PROJECT_DIR$/app/client-app.iml" group="Tweeter/app" />
+      <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" group="Tweeter/server" />
+      <module fileurl="file://$PROJECT_DIR$/shared/shared.iml" filepath="$PROJECT_DIR$/shared/shared.iml" group="Tweeter/shared" />
     </modules>
   </component>
 </project>

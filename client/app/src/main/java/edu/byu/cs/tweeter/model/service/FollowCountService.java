@@ -11,7 +11,7 @@ public class FollowCountService {
         return serverFacade.getFollowCount(request);
     }
 
-    ServerFacade getServerFacade() {
+    public ServerFacade getServerFacade() {
         return new ServerFacade();
     }
 }

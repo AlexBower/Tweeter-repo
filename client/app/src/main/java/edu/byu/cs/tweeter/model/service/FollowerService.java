@@ -28,7 +28,7 @@ public class FollowerService {
         }
     }
 
-    ServerFacade getServerFacade() {
+    public ServerFacade getServerFacade() {
         return new ServerFacade();
     }
 }

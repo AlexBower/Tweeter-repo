@@ -21,7 +21,7 @@ public class FollowingServiceTest {
     private FollowingResponse successResponse;
     private FollowingResponse failureResponse;
 
-    private FollowingService followingServiceSpy;
+    private FollowingServiceProxy mFollowingServiceProxySpy;
 
     /**
      * Create a FollowingService spy that uses a mock ServerFacade to return known responses to
@@ -51,12 +51,12 @@ public class FollowingServiceTest {
         Mockito.when(mockServerFacade.getFollowees(invalidRequest)).thenReturn(failureResponse);
 
         // Create a FollowingService instance and wrap it with a spy that will use the mock service
-        followingServiceSpy = Mockito.spy(new FollowingService());
-        Mockito.when(followingServiceSpy.getServerFacade()).thenReturn(mockServerFacade);
+        mFollowingServiceProxySpy = Mockito.spy(new FollowingServiceProxy());
+        Mockito.when(mFollowingServiceProxySpy.getServerFacade()).thenReturn(mockServerFacade);
     }
 
     /**
-     * Verify that for successful requests the {@link FollowingService#getFollowees(FollowingRequest)}
+     * Verify that for successful requests the {@link FollowingServiceProxy#getFollowees(FollowingRequest)}
      * method returns the same result as the {@link ServerFacade}.
      * .
      *
@@ -64,19 +64,19 @@ public class FollowingServiceTest {
      */
     @Test
     public void testGetFollowees_validRequest_correctResponse() throws IOException {
-        FollowingResponse response = followingServiceSpy.getFollowees(validRequest);
+        FollowingResponse response = mFollowingServiceProxySpy.getFollowees(validRequest);
         Assertions.assertEquals(successResponse, response);
     }
 
     /**
-     * Verify that the {@link FollowingService#getFollowees(FollowingRequest)} method loads the
+     * Verify that the {@link FollowingServiceProxy#getFollowees(FollowingRequest)} method loads the
      * profile image of each user included in the result.
      *
      * @throws IOException if an IO error occurs.
      */
     @Test
     public void testGetFollowees_validRequest_loadsProfileImages() throws IOException {
-        FollowingResponse response = followingServiceSpy.getFollowees(validRequest);
+        FollowingResponse response = mFollowingServiceProxySpy.getFollowees(validRequest);
 
         for(User user : response.getFollowees()) {
             Assertions.assertNotNull(user.getImageBytes());
@@ -84,14 +84,14 @@ public class FollowingServiceTest {
     }
 
     /**
-     * Verify that for failed requests the {@link FollowingService#getFollowees(FollowingRequest)}
+     * Verify that for failed requests the {@link FollowingServiceProxy#getFollowees(FollowingRequest)}
      * method returns the same result as the {@link ServerFacade}.
      *
      * @throws IOException if an IO error occurs.
      */
     @Test
     public void testGetFollowees_invalidRequest_returnsNoFollowees() throws IOException {
-        FollowingResponse response = followingServiceSpy.getFollowees(invalidRequest);
+        FollowingResponse response = mFollowingServiceProxySpy.getFollowees(invalidRequest);
         Assertions.assertEquals(failureResponse, response);
     }
 }

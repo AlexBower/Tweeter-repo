@@ -7,9 +7,8 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.service.LoginService;
+import edu.byu.cs.tweeter.model.service.LoginServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 
@@ -17,7 +16,7 @@ public class LoginPresenterTest {
 
     private LoginRequest request;
     private LoginResponse response;
-    private LoginService mockLoginService;
+    private LoginServiceProxy mMockLoginServiceProxy;
     private LoginPresenter presenter;
 
     @BeforeEach
@@ -29,11 +28,11 @@ public class LoginPresenterTest {
         request = new LoginRequest("@Test", "password");
         response = new LoginResponse(resultUser, resultAuthToken);
 
-        mockLoginService = Mockito.mock(LoginService.class);
-        Mockito.when(mockLoginService.login(request)).thenReturn(response);
+        mMockLoginServiceProxy = Mockito.mock(LoginServiceProxy.class);
+        Mockito.when(mMockLoginServiceProxy.login(request)).thenReturn(response);
 
         presenter = Mockito.spy(new LoginPresenter(new LoginPresenter.View() {}));
-        Mockito.when(presenter.getLoginService()).thenReturn(mockLoginService);
+        Mockito.when(presenter.getLoginService()).thenReturn(mMockLoginServiceProxy);
     }
 
     @Test
@@ -45,7 +44,7 @@ public class LoginPresenterTest {
 
     @Test
     public void testLogin_serviceThrowsIOException_presenterThrowsIOException() throws IOException {
-        Mockito.when(mockLoginService.login(request)).thenThrow(new IOException());
+        Mockito.when(mMockLoginServiceProxy.login(request)).thenThrow(new IOException());
 
         Assertions.assertThrows(IOException.class, () -> {
             presenter.login(request);

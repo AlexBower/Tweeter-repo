@@ -11,7 +11,7 @@ public class FollowService {
         return serverFacade.follow(request);
     }
 
-    ServerFacade getServerFacade() {
+    public ServerFacade getServerFacade() {
         return new ServerFacade();
     }
 }

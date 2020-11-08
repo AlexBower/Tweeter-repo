@@ -8,7 +8,6 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.LogoutService;

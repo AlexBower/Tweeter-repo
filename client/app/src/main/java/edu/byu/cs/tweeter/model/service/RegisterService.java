@@ -31,7 +31,7 @@ public class RegisterService {
         }
     }
 
-    ServerFacade getServerFacade() {
+    public ServerFacade getServerFacade() {
         return new ServerFacade();
     }
 }

@@ -13,7 +13,7 @@ public class LogoutService {
         return serverFacade.logout(request);
     }
 
-    ServerFacade getServerFacade() {
+    public ServerFacade getServerFacade() {
         return new ServerFacade();
     }
 }

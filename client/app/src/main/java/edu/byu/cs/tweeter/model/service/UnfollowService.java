@@ -11,7 +11,7 @@ public class UnfollowService {
         return serverFacade.unfollow(request);
     }
 
-    ServerFacade getServerFacade() {
+    public ServerFacade getServerFacade() {
         return new ServerFacade();
     }
 }
