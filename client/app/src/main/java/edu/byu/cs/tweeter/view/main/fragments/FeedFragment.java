@@ -78,7 +78,7 @@ public class FeedFragment extends StatusFragment implements FeedPresenter.View {
 
         void doLoadMoreItems() {
             GetFeedTask getFeedTask = new GetFeedTask(presenter, this);
-            StatusRequest request = new StatusRequest(user, PAGE_SIZE, lastStatus);
+            StatusRequest request = new StatusRequest(user, PAGE_SIZE, lastStatus, authToken);
             getFeedTask.execute(request);
         }
 

@@ -35,7 +35,7 @@ public class GetStoryTask extends AsyncTask<StatusRequest, Void, StatusResponse>
 
         try {
             response = presenter.getStory(statusRequests[0]);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             exception = ex;
         }
 

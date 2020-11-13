@@ -4,14 +4,17 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.ServerFacade;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
-public class FollowerService {
+public class FollowerServiceProxy implements FollowerService {
 
-    public FollowerResponse getFollowers(FollowerRequest request) throws IOException {
-        FollowerResponse response = getServerFacade().getFollowers(request);
+    public static final String URL_PATH = "/getfollower";
+
+    public FollowerResponse getFollowers(FollowerRequest request) throws IOException, TweeterRemoteException {
+        FollowerResponse response = getServerFacade().getFollowers(request, URL_PATH);
         if(response.isSuccess()) {
             loadImages(response);
         }

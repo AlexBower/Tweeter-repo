@@ -78,7 +78,7 @@ public class StoryFragment extends StatusFragment implements StoryPresenter.View
 
         void doLoadMoreItems() {
             GetStoryTask getStoryTask = new GetStoryTask(presenter, this);
-            StatusRequest request = new StatusRequest(user, PAGE_SIZE, lastStatus);
+            StatusRequest request = new StatusRequest(user, PAGE_SIZE, lastStatus, authToken);
             getStoryTask.execute(request);
         }
 

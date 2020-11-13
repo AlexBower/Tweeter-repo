@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements
                         String newPostText = input.getText().toString();
                         PostStatusTask postStatusTask = new PostStatusTask(presenter, MainActivity.this, sectionsPagerAdapter);
                         postStatusTask.execute(new PostStatusRequest(
-                                new Status(newPostText, LocalDateTime.now(), loggedInUser)));
+                                new Status(newPostText, LocalDateTime.now(), loggedInUser), authToken));
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         GetFollowCountTask getFollowCountTask = new GetFollowCountTask(presenter, this);
-        getFollowCountTask.execute(new FollowCountRequest(loggedInUser));
+        getFollowCountTask.execute(new FollowCountRequest(loggedInUser, authToken));
     }
 
     @Override

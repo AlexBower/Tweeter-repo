@@ -8,12 +8,15 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.util.Arrays;
 
+import edu.byu.cs.tweeter.TestWithAuthToken;
 import edu.byu.cs.tweeter.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.FollowingServiceProxy;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 
-public class FollowingServiceProxyTest {
+public class FollowingServiceProxyTest extends TestWithAuthToken {
 
     private FollowingRequest validRequest;
     private FollowingRequest invalidRequest;
@@ -39,8 +42,8 @@ public class FollowingServiceProxyTest {
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png");
 
         // Setup request objects to use in the tests
-        validRequest = new FollowingRequest(currentUser, 3, null);
-        invalidRequest = new FollowingRequest(null, 0, null);
+        validRequest = new FollowingRequest(currentUser, 3, null, authToken);
+        invalidRequest = new FollowingRequest(null, 0, null, authToken);
 
         // Setup a mock ServerFacade that will return known responses
         successResponse = new FollowingResponse(Arrays.asList(resultUser1, resultUser2, resultUser3), false);

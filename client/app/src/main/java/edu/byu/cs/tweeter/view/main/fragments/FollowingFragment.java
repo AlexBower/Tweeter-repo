@@ -88,7 +88,7 @@ public class FollowingFragment extends FollowFragment implements FollowingPresen
          */
         void doLoadMoreItems() {
             GetFollowingTask getFollowingTask = new GetFollowingTask(presenter, this);
-            FollowingRequest request = new FollowingRequest(user, PAGE_SIZE, lastUser);
+            FollowingRequest request = new FollowingRequest(user, PAGE_SIZE, lastUser, authToken);
             getFollowingTask.execute(request);
         }
 

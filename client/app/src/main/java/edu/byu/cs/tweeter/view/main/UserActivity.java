@@ -100,13 +100,13 @@ public class UserActivity extends AppCompatActivity implements
                     FollowTask followTask = new FollowTask(presenter,
                             UserActivity.this,
                             userPagerAdapter);
-                    followTask.execute(new FollowRequest(MainActivity.loggedInUser, user));
+                    followTask.execute(new FollowRequest(MainActivity.loggedInUser, user, authToken));
                 } else {
                     // The toggle is checked, unfollow user
                     UnfollowTask unfollowTask = new UnfollowTask(presenter,
                             UserActivity.this,
                             userPagerAdapter);
-                    unfollowTask.execute(new UnfollowRequest(MainActivity.loggedInUser, user));
+                    unfollowTask.execute(new UnfollowRequest(MainActivity.loggedInUser, user, authToken));
                 }
             }
         });
@@ -116,12 +116,12 @@ public class UserActivity extends AppCompatActivity implements
 
     private void updateFollowButton() {
         IsFollowingTask isFollowingTask = new IsFollowingTask(presenter, this);
-        isFollowingTask.execute(new IsFollowingRequest(MainActivity.loggedInUser, user));
+        isFollowingTask.execute(new IsFollowingRequest(MainActivity.loggedInUser, user, authToken));
     }
 
     private void updateFollowCount() {
         GetFollowCountTask getFollowCountTask = new GetFollowCountTask(presenter, this);
-        getFollowCountTask.execute(new FollowCountRequest(user));
+        getFollowCountTask.execute(new FollowCountRequest(user, authToken));
     }
 
     @Override

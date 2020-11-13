@@ -7,10 +7,12 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.TestWithAuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.service.FollowService;
-import edu.byu.cs.tweeter.model.service.IsFollowingService;
-import edu.byu.cs.tweeter.model.service.UnfollowService;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.FollowServiceProxy;
+import edu.byu.cs.tweeter.model.service.IsFollowingServiceProxy;
+import edu.byu.cs.tweeter.model.service.UnfollowServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.request.IsFollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.UnfollowRequest;
@@ -18,64 +20,64 @@ import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 import edu.byu.cs.tweeter.model.service.response.IsFollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
 
-public class UserPresenterTest {
+public class UserPresenterTest extends TestWithAuthToken {
 
     private IsFollowingRequest isFollowingRequest;
     private IsFollowingResponse isFollowingResponse;
-    private IsFollowingService mockIsFollowingService;
+    private IsFollowingServiceProxy mMockIsFollowingServiceProxy;
 
     private FollowRequest followRequest;
     private FollowResponse followResponse;
-    private FollowService mockFollowService;
+    private FollowServiceProxy mMockFollowServiceProxy;
 
     private UnfollowRequest unfollowRequest;
     private UnfollowResponse unfollowResponse;
-    private UnfollowService mockUnfollowService;
+    private UnfollowServiceProxy mMockUnfollowServiceProxy;
 
     private UserPresenter presenter;
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void setup() throws IOException, TweeterRemoteException {
         User user = new User("FirstName", "LastName",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
         User otherUser = new User("FirstName1", "LastName1",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
 
-        isFollowingRequest = new IsFollowingRequest(user, otherUser);
+        isFollowingRequest = new IsFollowingRequest(user, otherUser, authToken);
         isFollowingResponse = new IsFollowingResponse(true);
-        mockIsFollowingService = Mockito.mock(IsFollowingService.class);
-        Mockito.when(mockIsFollowingService.isFollowing(isFollowingRequest)).thenReturn(isFollowingResponse);
+        mMockIsFollowingServiceProxy = Mockito.mock(IsFollowingServiceProxy.class);
+        Mockito.when(mMockIsFollowingServiceProxy.isFollowing(isFollowingRequest)).thenReturn(isFollowingResponse);
 
-        followRequest = new FollowRequest(user, otherUser);
+        followRequest = new FollowRequest(user, otherUser, authToken);
         followResponse = new FollowResponse(true);
-        mockFollowService = Mockito.mock(FollowService.class);
-        Mockito.when(mockFollowService.follow(followRequest)).thenReturn(followResponse);
+        mMockFollowServiceProxy = Mockito.mock(FollowServiceProxy.class);
+        Mockito.when(mMockFollowServiceProxy.follow(followRequest)).thenReturn(followResponse);
 
-        unfollowRequest = new UnfollowRequest(user, otherUser);
+        unfollowRequest = new UnfollowRequest(user, otherUser, authToken);
         unfollowResponse = new UnfollowResponse(true);
-        mockUnfollowService = Mockito.mock(UnfollowService.class);
-        Mockito.when(mockUnfollowService.unfollow(unfollowRequest)).thenReturn(unfollowResponse);
+        mMockUnfollowServiceProxy = Mockito.mock(UnfollowServiceProxy.class);
+        Mockito.when(mMockUnfollowServiceProxy.unfollow(unfollowRequest)).thenReturn(unfollowResponse);
 
         presenter = Mockito.spy(new UserPresenter(new UserPresenter.View() {}));
-        Mockito.when(presenter.getIsFollowingService()).thenReturn(mockIsFollowingService);
-        Mockito.when(presenter.getFollowService()).thenReturn(mockFollowService);
-        Mockito.when(presenter.getUnfollowService()).thenReturn(mockUnfollowService);
+        Mockito.when(presenter.getIsFollowingService()).thenReturn(mMockIsFollowingServiceProxy);
+        Mockito.when(presenter.getFollowService()).thenReturn(mMockFollowServiceProxy);
+        Mockito.when(presenter.getUnfollowService()).thenReturn(mMockUnfollowServiceProxy);
     }
 
     @Test
-    public void testIsFollowing_returnsServiceResult() {
+    public void testIsFollowing_returnsServiceResult() throws IOException, TweeterRemoteException {
         // Assert that the presenter returns the same response as the service
         Assertions.assertEquals(isFollowingResponse, presenter.isFollowing(isFollowingRequest));
     }
 
     @Test
-    public void testFollow_returnsServiceResult() {
+    public void testFollow_returnsServiceResult() throws IOException, TweeterRemoteException {
         // Assert that the presenter returns the same response as the service
         Assertions.assertEquals(followResponse, presenter.follow(followRequest));
     }
 
     @Test
-    public void testUnfollow_returnsServiceResult() {
+    public void testUnfollow_returnsServiceResult() throws IOException, TweeterRemoteException {
         // Assert that the presenter returns the same response as the service
         Assertions.assertEquals(unfollowResponse, presenter.unfollow(unfollowRequest));
     }

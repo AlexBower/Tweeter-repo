@@ -11,12 +11,11 @@ public class LoginRequest {
     /**
      * Allows construction of the object from Json. Private so it won't be called in normal code.
      */
-    private LoginRequest() {}
+    protected LoginRequest() {}
 
     /**
      * Creates an instance.
-     *
-     * @param username the username of the user to be logged in.
+     *  @param username the username of the user to be logged in.
      * @param password the password of the user to be logged in.
      */
     public LoginRequest(String username, String password) {

@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.model.service.request;
 
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
 /**
@@ -11,6 +12,7 @@ public class FollowingRequest {
     private User follower;
     private int limit;
     private User lastFollowee;
+    private AuthToken authtoken;
 
     /**
      * Allows construction of the object from Json. Private so it won't be called in normal code.
@@ -19,17 +21,17 @@ public class FollowingRequest {
 
     /**
      * Creates an instance.
-     *
-     * @param follower the {@link User} whose followees are to be returned.
+     *  @param follower the {@link User} whose followees are to be returned.
      * @param limit the maximum number of followees to return.
      * @param lastFollowee the last followee that was returned in the previous request (null if
-     *                     there was no previous request or if no followees were returned in the
-     *                     previous request).
+ *                     there was no previous request or if no followees were returned in the
+     * @param authtoken
      */
-    public FollowingRequest(User follower, int limit, User lastFollowee) {
+    public FollowingRequest(User follower, int limit, User lastFollowee, AuthToken authtoken) {
         this.follower = follower;
         this.limit = limit;
         this.lastFollowee = lastFollowee;
+        this.authtoken = authtoken;
     }
 
     /**
@@ -85,5 +87,13 @@ public class FollowingRequest {
      */
     public void setLastFollowee(User lastFollowee) {
         this.lastFollowee = lastFollowee;
+    }
+
+    public AuthToken getAuthtoken() {
+        return authtoken;
+    }
+
+    public void setAuthtoken(AuthToken authtoken) {
+        this.authtoken = authtoken;
     }
 }

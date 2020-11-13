@@ -7,8 +7,12 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.LoginServiceProxy;
+import edu.byu.cs.tweeter.model.service.request.LoginRequest;
+import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 
 public class LoginPresenterTest {
 
@@ -18,7 +22,7 @@ public class LoginPresenterTest {
     private LoginPresenter presenter;
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void setup() throws IOException, TweeterRemoteException {
         User resultUser = new User("FirstName", "LastName",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
         AuthToken resultAuthToken = new AuthToken();
@@ -34,14 +38,14 @@ public class LoginPresenterTest {
     }
 
     @Test
-    public void testLogin_returnsServiceResult() throws IOException {
+    public void testLogin_returnsServiceResult() throws IOException, TweeterRemoteException {
         // Assert that the presenter returns the same response as the service (it doesn't do
         // anything else, so there's nothing else to test).
         Assertions.assertEquals(response, presenter.login(request));
     }
 
     @Test
-    public void testLogin_serviceThrowsIOException_presenterThrowsIOException() throws IOException {
+    public void testLogin_serviceThrowsIOException_presenterThrowsIOException() throws IOException, TweeterRemoteException {
         Mockito.when(mMockLoginServiceProxy.login(request)).thenThrow(new IOException());
 
         Assertions.assertThrows(IOException.class, () -> {

@@ -5,7 +5,7 @@ package edu.byu.cs.tweeter.model.service.response;
  */
 public class PagedResponse extends Response {
 
-    private final boolean hasMorePages;
+    private boolean hasMorePages;
 
     PagedResponse(boolean success, boolean hasMorePages) {
         super(success);

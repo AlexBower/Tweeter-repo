@@ -4,14 +4,18 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.net.ServerFacade;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
-public class StatusService {
+public class StatusServiceProxy implements StatusService {
 
-    public StatusResponse getStory(StatusRequest request) throws IOException {
-        StatusResponse response = getServerFacade().getStory(request);
+    public static final String GET_STORY_URL_PATH = "/getstory";
+    public static final String GET_FEED_URL_PATH = "/getfeed";
+
+    public StatusResponse getStory(StatusRequest request) throws IOException, TweeterRemoteException {
+        StatusResponse response = getServerFacade().getStory(request, GET_STORY_URL_PATH);
 
         if(response.isSuccess()) {
             loadImages(response);
@@ -20,8 +24,8 @@ public class StatusService {
         return response;
     }
 
-    public StatusResponse getFeed(StatusRequest request) throws IOException {
-        StatusResponse response = getServerFacade().getFeed(request);
+    public StatusResponse getFeed(StatusRequest request) throws IOException, TweeterRemoteException {
+        StatusResponse response = getServerFacade().getFeed(request, GET_FEED_URL_PATH);
 
         if(response.isSuccess()) {
             loadImages(response);

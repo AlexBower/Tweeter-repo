@@ -35,7 +35,7 @@ public class GetFollowerTask extends AsyncTask<FollowerRequest, Void, FollowerRe
 
         try {
             response = presenter.getFollower(followerRequests[0]);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             exception = ex;
         }
 

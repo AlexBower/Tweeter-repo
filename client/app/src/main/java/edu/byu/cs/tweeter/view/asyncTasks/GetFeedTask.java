@@ -35,7 +35,7 @@ public class GetFeedTask extends AsyncTask<StatusRequest, Void, StatusResponse> 
 
         try {
             response = presenter.getFeed(statusRequests[0]);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             exception = ex;
         }
 

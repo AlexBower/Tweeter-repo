@@ -2,8 +2,9 @@ package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.model.service.LogoutService;
-import edu.byu.cs.tweeter.model.service.PostStatusService;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.LogoutServiceProxy;
+import edu.byu.cs.tweeter.model.service.PostStatusServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
@@ -23,17 +24,17 @@ public class MainPresenter extends FollowCountPresenter{
         this.view = view;
     }
 
-    public LogoutResponse logout(LogoutRequest request) {
-        LogoutService logoutService = getLogoutService();
+    public LogoutResponse logout(LogoutRequest request) throws IOException, TweeterRemoteException {
+        LogoutServiceProxy logoutService = getLogoutService();
         return logoutService.logout(request);
     }
 
-    LogoutService getLogoutService() { return new LogoutService(); }
+    LogoutServiceProxy getLogoutService() { return new LogoutServiceProxy(); }
 
-    public PostStatusResponse postStatus(PostStatusRequest request) {
-        PostStatusService postStatusService = getPostStatusService();
+    public PostStatusResponse postStatus(PostStatusRequest request) throws IOException, TweeterRemoteException {
+        PostStatusServiceProxy postStatusService = getPostStatusService();
         return postStatusService.postStatus(request);
     }
 
-    PostStatusService getPostStatusService() { return new PostStatusService(); }
+    PostStatusServiceProxy getPostStatusService() { return new PostStatusServiceProxy(); }
 }

@@ -8,10 +8,14 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.util.Arrays;
 
+import edu.byu.cs.tweeter.TestWithAuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.ServerFacade;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 
-public class FollowingServiceTest {
+public class FollowingServiceTest extends TestWithAuthToken {
 
     private FollowingRequest validRequest;
     private FollowingRequest invalidRequest;
@@ -26,7 +30,7 @@ public class FollowingServiceTest {
      * requests.
      */
     @BeforeEach
-    public void setup() {
+    public void setup() throws IOException, TweeterRemoteException {
         User currentUser = new User("FirstName", "LastName", null);
 
         User resultUser1 = new User("FirstName1", "LastName1",
@@ -37,16 +41,16 @@ public class FollowingServiceTest {
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png");
 
         // Setup request objects to use in the tests
-        validRequest = new FollowingRequest(currentUser, 3, null);
-        invalidRequest = new FollowingRequest(null, 0, null);
+        validRequest = new FollowingRequest(currentUser, 3, null, authToken);
+        invalidRequest = new FollowingRequest(null, 0, null, authToken);
 
         // Setup a mock ServerFacade that will return known responses
         successResponse = new FollowingResponse(Arrays.asList(resultUser1, resultUser2, resultUser3), false);
         ServerFacade mockServerFacade = Mockito.mock(ServerFacade.class);
-        Mockito.when(mockServerFacade.getFollowees(validRequest)).thenReturn(successResponse);
+        Mockito.when(mockServerFacade.getFollowees(validRequest, FollowingServiceProxy.URL_PATH)).thenReturn(successResponse);
 
         failureResponse = new FollowingResponse("An exception occurred");
-        Mockito.when(mockServerFacade.getFollowees(invalidRequest)).thenReturn(failureResponse);
+        Mockito.when(mockServerFacade.getFollowees(invalidRequest, FollowingServiceProxy.URL_PATH)).thenReturn(failureResponse);
 
         // Create a FollowingService instance and wrap it with a spy that will use the mock service
         mFollowingServiceProxySpy = Mockito.spy(new FollowingServiceProxy());
@@ -61,7 +65,7 @@ public class FollowingServiceTest {
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testGetFollowees_validRequest_correctResponse() throws IOException {
+    public void testGetFollowees_validRequest_correctResponse() throws IOException, TweeterRemoteException {
         FollowingResponse response = mFollowingServiceProxySpy.getFollowees(validRequest);
         Assertions.assertEquals(successResponse, response);
     }
@@ -73,7 +77,7 @@ public class FollowingServiceTest {
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testGetFollowees_validRequest_loadsProfileImages() throws IOException {
+    public void testGetFollowees_validRequest_loadsProfileImages() throws IOException, TweeterRemoteException {
         FollowingResponse response = mFollowingServiceProxySpy.getFollowees(validRequest);
 
         for(User user : response.getFollowees()) {
@@ -88,7 +92,7 @@ public class FollowingServiceTest {
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testGetFollowees_invalidRequest_returnsNoFollowees() throws IOException {
+    public void testGetFollowees_invalidRequest_returnsNoFollowees() throws IOException, TweeterRemoteException {
         FollowingResponse response = mFollowingServiceProxySpy.getFollowees(invalidRequest);
         Assertions.assertEquals(failureResponse, response);
     }

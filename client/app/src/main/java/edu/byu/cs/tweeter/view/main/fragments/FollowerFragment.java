@@ -70,7 +70,7 @@ public class FollowerFragment extends FollowFragment implements FollowerPresente
 
         void doLoadMoreItems() {
             GetFollowerTask getFollowerTask = new GetFollowerTask(presenter, this);
-            FollowerRequest request = new FollowerRequest(user, PAGE_SIZE, lastUser);
+            FollowerRequest request = new FollowerRequest(user, PAGE_SIZE, lastUser, authToken);
             getFollowerTask.execute(request);
         }
 

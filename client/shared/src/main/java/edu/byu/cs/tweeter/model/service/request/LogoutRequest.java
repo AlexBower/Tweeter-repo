@@ -5,11 +5,23 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class LogoutRequest {
 
-    private final AuthToken authToken;
-    private final User user;
+    private AuthToken authToken;
+    private User user;
+
+    private LogoutRequest() {
+
+    }
 
     public LogoutRequest(User user, AuthToken authToken) {
         this.user = user;
+        this.authToken = authToken;
+    }
+
+    public AuthToken getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(AuthToken authToken) {
         this.authToken = authToken;
     }
 
@@ -17,5 +29,7 @@ public class LogoutRequest {
         return user;
     }
 
-    public AuthToken getAuthToken() { return authToken; }
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

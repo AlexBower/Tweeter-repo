@@ -2,7 +2,8 @@ package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.model.service.GetUserService;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.GetUserServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.service.response.GetUserResponse;
 
@@ -20,10 +21,10 @@ public class PaginatedPresenter {
         this.view = view;
     }
 
-    public GetUserResponse getUser(GetUserRequest getUserRequest) throws IOException {
-        GetUserService getUserService = getGetUserService();
+    public GetUserResponse getUser(GetUserRequest getUserRequest) throws IOException, TweeterRemoteException {
+        GetUserServiceProxy getUserService = getGetUserService();
         return getUserService.getUser(getUserRequest);
     }
 
-    GetUserService getGetUserService() { return new GetUserService(); }
+    GetUserServiceProxy getGetUserService() { return new GetUserServiceProxy(); }
 }

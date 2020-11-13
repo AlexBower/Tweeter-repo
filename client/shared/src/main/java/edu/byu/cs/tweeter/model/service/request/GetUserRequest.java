@@ -1,18 +1,33 @@
 package edu.byu.cs.tweeter.model.service.request;
 
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+
 public class GetUserRequest {
 
-        private String username;
+    private String username;
+    private AuthToken authToken;
 
-        public GetUserRequest(String username) {
-            this.username = username;
-        }
+    private GetUserRequest() {
+    }
 
-        public String getUsername() {
-            return username;
-        }
+    public GetUserRequest(String username, AuthToken authToken) {
+        this.username = username;
+        this.authToken = authToken;
+    }
 
-        public void setUsername(String username) {
-            this.username = username;
-        }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public AuthToken getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(AuthToken authToken) {
+        this.authToken = authToken;
+    }
 }

@@ -1,8 +1,11 @@
 package edu.byu.cs.tweeter.presenter;
 
-import edu.byu.cs.tweeter.model.service.FollowService;
-import edu.byu.cs.tweeter.model.service.IsFollowingService;
-import edu.byu.cs.tweeter.model.service.UnfollowService;
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.FollowServiceProxy;
+import edu.byu.cs.tweeter.model.service.IsFollowingServiceProxy;
+import edu.byu.cs.tweeter.model.service.UnfollowServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.request.IsFollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.UnfollowRequest;
@@ -24,24 +27,24 @@ public class UserPresenter extends FollowCountPresenter{
         this.view = view;
     }
 
-    public IsFollowingResponse isFollowing(IsFollowingRequest request) {
-        IsFollowingService isFollowingService = getIsFollowingService();
+    public IsFollowingResponse isFollowing(IsFollowingRequest request) throws IOException, TweeterRemoteException {
+        IsFollowingServiceProxy isFollowingService = getIsFollowingService();
         return isFollowingService.isFollowing(request);
     }
 
-    IsFollowingService getIsFollowingService() { return new IsFollowingService(); }
+    IsFollowingServiceProxy getIsFollowingService() { return new IsFollowingServiceProxy(); }
 
-    public FollowResponse follow(FollowRequest request) {
-        FollowService followService = getFollowService();
+    public FollowResponse follow(FollowRequest request) throws IOException, TweeterRemoteException {
+        FollowServiceProxy followService = getFollowService();
         return followService.follow(request);
     }
 
-    FollowService getFollowService() { return new FollowService(); }
+    FollowServiceProxy getFollowService() { return new FollowServiceProxy(); }
 
-    public UnfollowResponse unfollow(UnfollowRequest request) {
-        UnfollowService unfollowService = getUnfollowService();
+    public UnfollowResponse unfollow(UnfollowRequest request) throws IOException, TweeterRemoteException {
+        UnfollowServiceProxy unfollowService = getUnfollowService();
         return unfollowService.unfollow(request);
     }
 
-    UnfollowService getUnfollowService() { return new UnfollowService(); }
+    UnfollowServiceProxy getUnfollowService() { return new UnfollowServiceProxy(); }
 }

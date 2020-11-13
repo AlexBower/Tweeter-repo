@@ -7,8 +7,10 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.service.RegisterService;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.RegisterServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
 
@@ -16,11 +18,11 @@ public class RegisterPresenterTest {
 
     private RegisterRequest request;
     private RegisterResponse response;
-    private RegisterService mockRegisterService;
+    private RegisterServiceProxy mMockRegisterServiceProxy;
     private RegisterPresenter presenter;
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void setup() throws IOException, TweeterRemoteException {
         byte[] testBytes= {0, 1, 0, 1};
 
         User resultUser = new User("FirstName",
@@ -36,23 +38,23 @@ public class RegisterPresenterTest {
                 testBytes);
         response = new RegisterResponse(resultUser, resultAuthToken);
 
-        mockRegisterService = Mockito.mock(RegisterService.class);
-        Mockito.when(mockRegisterService.register(request)).thenReturn(response);
+        mMockRegisterServiceProxy = Mockito.mock(RegisterServiceProxy.class);
+        Mockito.when(mMockRegisterServiceProxy.register(request)).thenReturn(response);
 
         presenter = Mockito.spy(new RegisterPresenter(new RegisterPresenter.View() {}));
-        Mockito.when(presenter.getRegisterService()).thenReturn(mockRegisterService);
+        Mockito.when(presenter.getRegisterService()).thenReturn(mMockRegisterServiceProxy);
     }
 
     @Test
-    public void testRegister_returnsServiceResult() throws IOException {
+    public void testRegister_returnsServiceResult() throws IOException, TweeterRemoteException {
         // Assert that the presenter returns the same response as the service (it doesn't do
         // anything else, so there's nothing else to test).
         Assertions.assertEquals(response, presenter.register(request));
     }
 
     @Test
-    public void testRegister_serviceThrowsIOException_presenterThrowsIOException() throws IOException {
-        Mockito.when(mockRegisterService.register(request)).thenThrow(new IOException());
+    public void testRegister_serviceThrowsIOException_presenterThrowsIOException() throws IOException, TweeterRemoteException {
+        Mockito.when(mMockRegisterServiceProxy.register(request)).thenThrow(new IOException());
 
         Assertions.assertThrows(IOException.class, () -> {
             presenter.register(request);

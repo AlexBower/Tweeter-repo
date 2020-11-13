@@ -5,8 +5,8 @@ package edu.byu.cs.tweeter.model.service.response;
  */
 class Response {
 
-    private final boolean success;
-    private final String message;
+    private boolean success;
+    private String message;
 
     /**
      * Creates an instance with a null message.

@@ -2,7 +2,8 @@ package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.model.service.FollowerService;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.FollowerServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 
@@ -18,12 +19,12 @@ public class FollowerPresenter {
         this.view = view;
     }
 
-    public FollowerResponse getFollower(FollowerRequest request) throws IOException {
-        FollowerService followerService = getFollowerService();
+    public FollowerResponse getFollower(FollowerRequest request) throws IOException, TweeterRemoteException {
+        FollowerServiceProxy followerService = getFollowerService();
         return followerService.getFollowers(request);
     }
 
-    FollowerService getFollowerService() {
-        return new FollowerService();
+    FollowerServiceProxy getFollowerService() {
+        return new FollowerServiceProxy();
     }
 }

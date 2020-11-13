@@ -38,7 +38,7 @@ public class RegisterTask extends AsyncTask<RegisterRequest, Void, RegisterRespo
 
         try {
             registerResponse = presenter.register(registerRequests[0]);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             exception = ex;
         }
 

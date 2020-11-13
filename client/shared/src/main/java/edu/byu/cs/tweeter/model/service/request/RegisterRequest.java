@@ -1,10 +1,16 @@
 package edu.byu.cs.tweeter.model.service.request;
 
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+
 public class RegisterRequest extends LoginRequest {
 
     private String firstName;
     private String lastName;
     private byte [] imageBytes;
+
+    private RegisterRequest() {
+
+    }
 
     /**
      * Creates an instance.

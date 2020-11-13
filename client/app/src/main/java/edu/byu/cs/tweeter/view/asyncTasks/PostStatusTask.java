@@ -2,6 +2,9 @@ package edu.byu.cs.tweeter.view.asyncTasks;
 
 import android.os.AsyncTask;
 
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 import edu.byu.cs.tweeter.presenter.MainPresenter;
@@ -30,7 +33,11 @@ public class PostStatusTask extends AsyncTask<PostStatusRequest, Void, PostStatu
     protected PostStatusResponse doInBackground(PostStatusRequest... postStatusRequests) {
 
         PostStatusResponse response = null;
-        response = presenter.postStatus(postStatusRequests[0]);
+        try {
+            response = presenter.postStatus(postStatusRequests[0]);
+        } catch (Exception ex) {
+            exception = ex;
+        }
 
         return response;
     }

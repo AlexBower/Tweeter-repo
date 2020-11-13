@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
 import edu.byu.cs.tweeter.presenter.MainPresenter;
@@ -32,7 +33,11 @@ public class LogoutTask extends AsyncTask<LogoutRequest, Void, LogoutResponse> {
     @Override
     protected LogoutResponse doInBackground(LogoutRequest... logoutRequests) {
         LogoutResponse response = null;
-        response = presenter.logout(logoutRequests[0]);
+        try {
+            response = presenter.logout(logoutRequests[0]);
+        } catch (Exception ex) {
+            exception = ex;
+        }
 
         return response;
     }
