@@ -7,6 +7,22 @@ import java.io.Serializable;
  */
 public class AuthToken implements Serializable {
 
+    private String token;
+
+    public AuthToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public AuthToken() { }
+
     @Override
     public int hashCode() {
         return super.hashCode();
@@ -14,11 +30,13 @@ public class AuthToken implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        return true;
+        return super.equals(o);
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "AuthToken{" +
+                "token=" + token +
+                '}';
     }
 }

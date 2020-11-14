@@ -14,7 +14,7 @@ import edu.byu.cs.tweeter.util.ByteArrayUtils;
  */
 public class FollowingServiceProxy implements FollowingService {
 
-    public static final String URL_PATH = "/getfollowing";
+    public static final String URL_PATH = "/following";
 
     /**
      * Returns the users that the user specified in the request is following. Uses information in
@@ -26,6 +26,11 @@ public class FollowingServiceProxy implements FollowingService {
      * @return the followees.
      */
     public FollowingResponse getFollowees(FollowingRequest request) throws IOException, TweeterRemoteException {
+        request.setFollower(request.getFollower());
+        if (request.getLastFollowee() != null) {
+            request.setLastFollowee(request.getLastFollowee());
+        }
+
         FollowingResponse response = getServerFacade().getFollowees(request, URL_PATH);
 
         if(response.isSuccess()) {

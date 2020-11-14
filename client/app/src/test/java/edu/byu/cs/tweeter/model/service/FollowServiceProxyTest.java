@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.model.service;
 
+import com.google.gson.Gson;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import edu.byu.cs.tweeter.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
+import com.google.gson.Gson;
 
 public class FollowServiceProxyTest extends TestWithAuthToken {
 
@@ -52,6 +55,7 @@ public class FollowServiceProxyTest extends TestWithAuthToken {
     public void testFollow_validRequest_correctResponse() throws IOException, TweeterRemoteException {
         FollowResponse response = mFollowServiceProxySpy.follow(validRequest);
         Assertions.assertEquals(successResponse, response);
+        // String json = (new Gson()).toJson(validRequest);
     }
 
     @Test

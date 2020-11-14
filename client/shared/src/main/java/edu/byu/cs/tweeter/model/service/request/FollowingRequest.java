@@ -12,7 +12,7 @@ public class FollowingRequest {
     private User follower;
     private int limit;
     private User lastFollowee;
-    private AuthToken authtoken;
+    private AuthToken authToken;
 
     /**
      * Allows construction of the object from Json. Private so it won't be called in normal code.
@@ -25,13 +25,13 @@ public class FollowingRequest {
      * @param limit the maximum number of followees to return.
      * @param lastFollowee the last followee that was returned in the previous request (null if
  *                     there was no previous request or if no followees were returned in the
-     * @param authtoken
+     * @param authToken
      */
-    public FollowingRequest(User follower, int limit, User lastFollowee, AuthToken authtoken) {
+    public FollowingRequest(User follower, int limit, User lastFollowee, AuthToken authToken) {
         this.follower = follower;
         this.limit = limit;
         this.lastFollowee = lastFollowee;
-        this.authtoken = authtoken;
+        this.authToken = authToken;
     }
 
     /**
@@ -89,11 +89,11 @@ public class FollowingRequest {
         this.lastFollowee = lastFollowee;
     }
 
-    public AuthToken getAuthtoken() {
-        return authtoken;
+    public AuthToken getAuthToken() {
+        return authToken;
     }
 
-    public void setAuthtoken(AuthToken authtoken) {
-        this.authtoken = authtoken;
+    public void setAuthToken(AuthToken authToken) {
+        this.authToken = authToken;
     }
 }

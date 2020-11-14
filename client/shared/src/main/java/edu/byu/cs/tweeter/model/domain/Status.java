@@ -10,6 +10,8 @@ public class Status {
 
     private User user;
 
+    private Status() {}
+
     public Status(String message, LocalDateTime time, User user) {
 
         this.setMessage(message);
