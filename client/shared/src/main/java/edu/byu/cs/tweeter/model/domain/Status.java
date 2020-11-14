@@ -6,13 +6,13 @@ import java.util.Objects;
 public class Status {
     private String message;
 
-    private LocalDateTime time;
+    private String time;
 
     private User user;
 
     private Status() {}
 
-    public Status(String message, LocalDateTime time, User user) {
+    public Status(String message, String time, User user) {
 
         this.setMessage(message);
         this.setTime(time);
@@ -27,11 +27,11 @@ public class Status {
         this.message = message;
     }
 
-    public LocalDateTime getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

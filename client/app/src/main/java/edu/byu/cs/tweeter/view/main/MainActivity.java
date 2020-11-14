@@ -28,6 +28,7 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.TimeFormatter;
 import edu.byu.cs.tweeter.model.service.request.FollowCountRequest;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
                         String newPostText = input.getText().toString();
                         PostStatusTask postStatusTask = new PostStatusTask(presenter, MainActivity.this, sectionsPagerAdapter);
                         postStatusTask.execute(new PostStatusRequest(
-                                new Status(newPostText, LocalDateTime.now(), loggedInUser), authToken));
+                                new Status(newPostText, TimeFormatter.format(LocalDateTime.now()), loggedInUser), authToken));
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

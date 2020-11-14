@@ -28,6 +28,7 @@ import java.util.List;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.TimeFormatter;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 abstract public class StatusFragment extends PaginatedFragment {
@@ -61,7 +62,7 @@ abstract public class StatusFragment extends PaginatedFragment {
             userImage.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
             userAlias.setText(user.getAlias());
             userName.setText(user.getName());
-            statusTime.setText(formatTime(status.getTime()));
+            statusTime.setText(status.getTime());
             setupMessage(status.getMessage());
         }
 
@@ -104,12 +105,6 @@ abstract public class StatusFragment extends PaginatedFragment {
 
             statusMessage.setText(spannableString);
             statusMessage.setMovementMethod(LinkMovementMethod.getInstance());
-        }
-
-        @SuppressLint("NewApi")
-        String formatTime(LocalDateTime time) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy  hh:mm a");
-            return time.format(formatter);
         }
     }
 
@@ -192,7 +187,7 @@ abstract public class StatusFragment extends PaginatedFragment {
 
         @SuppressLint("NewApi")
         protected void addLoadingFooter() {
-            addItem(new Status("Dummy", LocalDateTime.now(), new User("Dummy", "User", "")));
+            addItem(new Status("Dummy", TimeFormatter.format(LocalDateTime.now()), new User("Dummy", "User", "")));
         }
 
         protected void removeLoadingFooter() {

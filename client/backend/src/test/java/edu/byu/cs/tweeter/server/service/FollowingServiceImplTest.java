@@ -8,18 +8,21 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.util.Arrays;
 
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
-import edu.byu.cs.tweeter.server.dao.FollowingDAO;
+import edu.byu.cs.tweeter.server.dao.FollowDAO;
 
 public class FollowingServiceImplTest {
 
     private FollowingRequest request;
     private FollowingResponse expectedResponse;
-    private FollowingDAO mockFollowingDAO;
+    private FollowDAO mockFollowDAO;
     private FollowingServiceImpl followingServiceImplSpy;
+
+    private AuthToken authToken = new AuthToken();
 
     @BeforeEach
     public void setup() {
@@ -33,20 +36,20 @@ public class FollowingServiceImplTest {
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png");
 
         // Setup a request object to use in the tests
-        request = new FollowingRequest(currentUser, 3, null, authtoken);
+        request = new FollowingRequest(currentUser, 3, null, authToken);
 
-        // Setup a mock FollowingDAO that will return known responses
+        // Setup a mock FollowDAO that will return known responses
         expectedResponse = new FollowingResponse(Arrays.asList(resultUser1, resultUser2, resultUser3), false);
-        mockFollowingDAO = Mockito.mock(FollowingDAO.class);
-        Mockito.when(mockFollowingDAO.getFollowees(request)).thenReturn(expectedResponse);
+        mockFollowDAO = Mockito.mock(FollowDAO.class);
+        Mockito.when(mockFollowDAO.getFollowees(request)).thenReturn(expectedResponse);
 
         followingServiceImplSpy = Mockito.spy(FollowingServiceImpl.class);
-        Mockito.when(followingServiceImplSpy.getFollowingDAO()).thenReturn(mockFollowingDAO);
+        Mockito.when(followingServiceImplSpy.getFollowDAO()).thenReturn(mockFollowDAO);
     }
 
     /**
      * Verify that the {@link FollowingServiceImpl#getFollowees(FollowingRequest)}
-     * method returns the same result as the {@link FollowingDAO} class.
+     * method returns the same result as the {@link FollowDAO} class.
      */
     @Test
     public void testGetFollowees_validRequest_correctResponse() throws IOException, TweeterRemoteException {

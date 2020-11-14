@@ -15,6 +15,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.TimeFormatter;
 import edu.byu.cs.tweeter.model.service.request.FollowCountRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
@@ -614,10 +615,9 @@ public class ServerFacade {
                             + user.getAlias()
                             + " check out this really cool url: "
                             + "http://google.com",
-                            LocalDateTime.now(),
+                            TimeFormatter.format(LocalDateTime.now()),
                             entry.getKey()));
                 }
-
                 storyByUser.put(entry.getKey(), statuses);
             }
         }

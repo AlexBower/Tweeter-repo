@@ -30,7 +30,7 @@ public class PostStatusServiceProxyTest extends TestWithAuthToken {
     public void setup() throws IOException, TweeterRemoteException {
         User user = new User("FirstName", "LastName",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
-        Status status = new Status("Test Message", LocalDateTime.now(), user);
+        Status status = new Status("Test Message", TimeFormatter.format(LocalDateTime.now()), user);
 
         // Setup request objects to use in the tests
         validRequest = new PostStatusRequest(status, authToken);

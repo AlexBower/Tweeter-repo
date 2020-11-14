@@ -14,6 +14,7 @@ import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.StatusServiceProxy;
+import edu.byu.cs.tweeter.model.service.TimeFormatter;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 
@@ -35,9 +36,9 @@ public class FeedPresenterTest extends TestWithAuthToken {
         User resultUser3 = new User("FirstName3", "LastName3",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png");
 
-        Status resultStatus1 = new Status("Test Message1", LocalDateTime.now(), resultUser1);
-        Status resultStatus2 = new Status("Test Message2", LocalDateTime.now(), resultUser2);
-        Status resultStatus3 = new Status("Test Message3", LocalDateTime.now(), resultUser3);
+        Status resultStatus1 = new Status("Test Message1", TimeFormatter.format(LocalDateTime.now()), resultUser1);
+        Status resultStatus2 = new Status("Test Message2", TimeFormatter.format(LocalDateTime.now()), resultUser2);
+        Status resultStatus3 = new Status("Test Message3", TimeFormatter.format(LocalDateTime.now()), resultUser3);
 
         request = new StatusRequest(currentUser, 3, null, authToken);
         response = new StatusResponse(Arrays.asList(resultStatus1, resultStatus2, resultStatus3), false);

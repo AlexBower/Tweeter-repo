@@ -15,6 +15,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.LogoutServiceProxy;
 import edu.byu.cs.tweeter.model.service.PostStatusServiceProxy;
+import edu.byu.cs.tweeter.model.service.TimeFormatter;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
@@ -36,7 +37,7 @@ public class MainPresenterTest extends TestWithAuthToken {
     public void setup() throws IOException, TweeterRemoteException {
         User user = new User("FirstName", "LastName",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
-        Status status = new Status("Test Message", LocalDateTime.now(), user);
+        Status status = new Status("Test Message", TimeFormatter.format(LocalDateTime.now()), user);
         AuthToken authToken = new AuthToken();
 
         postStatusRequest = new PostStatusRequest(status, authToken);

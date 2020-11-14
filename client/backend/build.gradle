@@ -7,6 +7,9 @@ dependencies {
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
     implementation 'com.amazonaws:aws-lambda-java-events:3.1.0'
     runtimeOnly 'com.amazonaws:aws-lambda-java-log4j2:1.2.0'
+    implementation 'org.mockito:mockito-all:1.10.19'
+    implementation 'androidx.test.ext:junit:1.1.0'
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
 }
 
 sourceCompatibility = "8"
