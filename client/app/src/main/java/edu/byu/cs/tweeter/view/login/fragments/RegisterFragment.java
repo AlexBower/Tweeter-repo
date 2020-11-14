@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.view.login.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
@@ -192,6 +194,7 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
@@ -202,7 +205,7 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
             imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();
             imageBitmap.recycle();
-            registerRequest.setImageBytes(byteArray);
+            registerRequest.setEncodedImageBytes(Base64.getEncoder().encodeToString(byteArray));
         }
     }
 }

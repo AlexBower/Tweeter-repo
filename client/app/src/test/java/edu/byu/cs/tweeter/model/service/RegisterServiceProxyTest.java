@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.Base64;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -39,8 +40,8 @@ public class RegisterServiceProxyTest {
                 "password",
                 "FirstName",
                 "LastName",
-                testBytes);
-        invalidRequest = new RegisterRequest("", "", "", "", testBytes);
+                Base64.getEncoder().encodeToString(testBytes));
+        invalidRequest = new RegisterRequest("", "", "", "", Base64.getEncoder().encodeToString(testBytes));
 
         // Setup a mock ServerFacade that will return known responses
         successResponse = new RegisterResponse(resultUser, resultAuthToken);

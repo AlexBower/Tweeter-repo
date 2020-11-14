@@ -229,7 +229,7 @@ public class ServerFacade {
         //byte [] bytes = ByteArrayUtils.bytesFromUrl(request.getImageUrl());
         //user.setImageBytes(bytes);
         // Used in place of assert statements because Android does not support them
-        byte [] image = request.getImageBytes();
+        byte [] image = request.getEncodedImageBytes();
         if (image == null) {
             try {
                 image = ByteArrayUtils.bytesFromUrl("https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");

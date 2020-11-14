@@ -1,12 +1,10 @@
 package edu.byu.cs.tweeter.model.service.request;
 
-import edu.byu.cs.tweeter.model.domain.AuthToken;
-
 public class RegisterRequest extends LoginRequest {
 
     private String firstName;
     private String lastName;
-    private byte [] imageBytes;
+    private String encodedImageBytes;
 
     private RegisterRequest() {
 
@@ -20,19 +18,19 @@ public class RegisterRequest extends LoginRequest {
      * @param username the username of the user to be registered.
      * @param password the password of the user to be registered in.
      */
-    public RegisterRequest(String username, String password, String firstName, String lastName, byte [] imageBytes) {
+    public RegisterRequest(String username, String password, String firstName, String lastName, String encodedImageBytes) {
         super(username, password);
         this.firstName = firstName;
         this.lastName = lastName;
-        this.imageBytes = imageBytes;
+        this.encodedImageBytes = encodedImageBytes;
     }
 
     public String getFirstName() { return firstName; }
 
     public String getLastName() { return lastName; }
 
-    public byte [] getImageBytes() {
-        return imageBytes;
+    public String getEncodedImageBytes() {
+        return encodedImageBytes;
     }
 
     public void setFirstName(String firstName) {
@@ -43,7 +41,7 @@ public class RegisterRequest extends LoginRequest {
         this.lastName = lastName;
     }
 
-    public void setImageBytes(byte[] imageBytes) {
-        this.imageBytes = imageBytes;
+    public void setEncodedImageBytes(String encodedImageBytes) {
+        this.encodedImageBytes = encodedImageBytes;
     }
 }
