@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -225,11 +226,12 @@ public class ServerFacade {
         return new LoginResponse(user, new AuthToken());
     }
 
+    @SuppressLint("NewApi")
     public RegisterResponse register(RegisterRequest request) {
         //byte [] bytes = ByteArrayUtils.bytesFromUrl(request.getImageUrl());
         //user.setImageBytes(bytes);
         // Used in place of assert statements because Android does not support them
-        byte [] image = request.getEncodedImageBytes();
+        byte[] image = Base64.getDecoder().decode(request.getEncodedImageBytes().getBytes());
         if (image == null) {
             try {
                 image = ByteArrayUtils.bytesFromUrl("https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");

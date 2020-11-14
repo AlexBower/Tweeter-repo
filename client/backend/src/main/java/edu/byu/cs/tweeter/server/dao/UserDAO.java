@@ -13,6 +13,7 @@ public class UserDAO {
 
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private final User test_boi = new User("Testing", "User", MALE_IMAGE_URL);
+    private final User regi_boi = new User("Regi", "Boi", MALE_IMAGE_URL);
 
     private AuthToken test_authToken = new AuthToken("brilliantly_secure_token");
 
@@ -25,6 +26,6 @@ public class UserDAO {
     }
 
     public RegisterResponse register(RegisterRequest request) {
-        return new RegisterResponse(test_boi, test_authToken);
+        return new RegisterResponse(regi_boi, test_authToken);
     }
 }

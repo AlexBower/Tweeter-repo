@@ -10,7 +10,7 @@ public class FollowCountResponse extends Response{
     }
 
     public FollowCountResponse(int followersCount, int followingCount) {
-        super(false, null);
+        super(true, null);
         this.followersCount = followersCount;
         this.followingCount = followingCount;
     }
