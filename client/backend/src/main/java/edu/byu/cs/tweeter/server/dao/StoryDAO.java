@@ -123,7 +123,6 @@ public class StoryDAO {
             status19, status20);
 
     public boolean postStatus(PostStatusRequest request) {
-        dummyStory.add(request.getStatus());
         return true;
     }
 

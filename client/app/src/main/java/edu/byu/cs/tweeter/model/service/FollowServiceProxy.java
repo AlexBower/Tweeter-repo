@@ -9,7 +9,7 @@ import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 
 public class FollowServiceProxy implements FollowService {
 
-    public static final String URL_PATH = "/getfollow";
+    public static final String URL_PATH = "/follow";
 
     public FollowResponse follow(FollowRequest request) throws IOException, TweeterRemoteException {
         ServerFacade serverFacade = getServerFacade();

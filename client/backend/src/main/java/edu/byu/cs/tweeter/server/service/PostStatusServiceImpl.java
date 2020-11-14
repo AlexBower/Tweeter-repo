@@ -9,9 +9,9 @@ import edu.byu.cs.tweeter.server.dao.StoryDAO;
 public class PostStatusServiceImpl implements PostStatusService {
     @Override
     public PostStatusResponse postStatus(PostStatusRequest request) {
-        return new PostStatusResponse(
-                getStoryDAO().postStatus(request)
-                        && getFeedDAO().postStatus(request));
+        getStoryDAO().postStatus(request);
+        getFeedDAO().postStatus(request);
+        return new PostStatusResponse(true);
 
     }
 
