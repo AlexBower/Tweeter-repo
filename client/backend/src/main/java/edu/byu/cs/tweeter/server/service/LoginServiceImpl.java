@@ -11,6 +11,9 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public LoginResponse login(LoginRequest request) {
+        if (request.getUsername() == null || request.getPassword() == null) {
+            throw new RuntimeException("BadRequest: " + "No username and/or password");
+        }
         return getUserDAO().login(request);
     }
 

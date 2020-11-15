@@ -13,8 +13,9 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.server.TestWithAuthToken;
 
-class FollowDAOTest {
+class FollowDAOTest extends TestWithAuthToken {
 
     private final User user1 = new User("Daffy", "Duck", "");
     private final User user2 = new User("Fred", "Flintstone", "");
@@ -26,8 +27,6 @@ class FollowDAOTest {
     private final User user8 = new User("Zoe", "Zabriski", "");
 
     private FollowDAO followDAOSpy;
-
-    private AuthToken authToken = new AuthToken();
 
     @BeforeEach
     void setup() {

@@ -1,15 +1,10 @@
 package edu.byu.cs.tweeter.view.asyncTasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import java.io.IOException;
-
-import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.service.response.GetUserResponse;
-import edu.byu.cs.tweeter.presenter.PaginatedPresenter;
-import edu.byu.cs.tweeter.util.ByteArrayUtils;
+import edu.byu.cs.tweeter.client.presenter.PaginatedPresenter;
 
 public class GetUserTask extends AsyncTask<GetUserRequest, Void, GetUserResponse> {
 

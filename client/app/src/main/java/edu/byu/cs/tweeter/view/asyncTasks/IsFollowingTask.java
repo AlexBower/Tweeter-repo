@@ -2,12 +2,9 @@ package edu.byu.cs.tweeter.view.asyncTasks;
 
 import android.os.AsyncTask;
 
-import java.io.IOException;
-
-import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.IsFollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.IsFollowingResponse;
-import edu.byu.cs.tweeter.presenter.UserPresenter;
+import edu.byu.cs.tweeter.client.presenter.UserPresenter;
 
 public class IsFollowingTask extends AsyncTask<IsFollowingRequest, Void, IsFollowingResponse> {
 

@@ -11,6 +11,9 @@ import edu.byu.cs.tweeter.server.dao.FollowDAO;
 public class IsFollowingServiceImpl implements IsFollowingService {
     @Override
     public IsFollowingResponse isFollowing(IsFollowingRequest request) {
+        if (request.getCurrentUser() == null || request.getOtherUser() == null) {
+            throw new RuntimeException("BadRequest: " + "No user");
+        }
         return getFollowDAO().isFollowing(request);
     }
 

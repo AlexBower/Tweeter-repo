@@ -12,6 +12,9 @@ public class FollowCountServiceImpl implements FollowCountService {
 
     @Override
     public FollowCountResponse getFollowCount(FollowCountRequest request) {
+        if (request.getUser() == null) {
+            throw new RuntimeException("BadRequest: " + "No user");
+        }
         FollowDAO followDAO = getFollowDAO();
         return new FollowCountResponse(
                 followDAO.getFollowerCount(request.getUser())

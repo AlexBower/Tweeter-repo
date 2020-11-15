@@ -8,6 +8,9 @@ import edu.byu.cs.tweeter.server.dao.FollowDAO;
 public class UnfollowServiceImpl implements UnfollowService {
     @Override
     public UnfollowResponse unfollow(UnfollowRequest request) {
+        if (request.getCurrentUser() == null || request.getOtherUser() == null) {
+            throw new RuntimeException("BadRequest: " + "No user");
+        }
         return getFollowDAO().unfollow(request);
     }
 

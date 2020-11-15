@@ -21,6 +21,9 @@ public class FollowingServiceImpl implements FollowingService {
      */
     @Override
     public FollowingResponse getFollowees(FollowingRequest request) {
+        if (request.getFollower() == null) {
+            throw new RuntimeException("BadRequest: " + "No user");
+        }
         return getFollowDAO().getFollowees(request);
     }
 

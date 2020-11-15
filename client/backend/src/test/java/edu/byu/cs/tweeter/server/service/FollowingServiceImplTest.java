@@ -13,16 +13,15 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.server.TestWithAuthToken;
 import edu.byu.cs.tweeter.server.dao.FollowDAO;
 
-public class FollowingServiceImplTest {
+public class FollowingServiceImplTest extends TestWithAuthToken {
 
     private FollowingRequest request;
     private FollowingResponse expectedResponse;
     private FollowDAO mockFollowDAO;
     private FollowingServiceImpl followingServiceImplSpy;
-
-    private AuthToken authToken = new AuthToken();
 
     @BeforeEach
     public void setup() {

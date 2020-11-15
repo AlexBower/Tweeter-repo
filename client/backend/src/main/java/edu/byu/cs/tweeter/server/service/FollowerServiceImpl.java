@@ -8,6 +8,9 @@ import edu.byu.cs.tweeter.server.dao.FollowDAO;
 public class FollowerServiceImpl implements FollowerService {
     @Override
     public FollowerResponse getFollowers(FollowerRequest request) {
+        if (request.getFollowee() == null) {
+            throw new RuntimeException("BadRequest: " + "No user");
+        }
         return getFollowDAO().getFollowers(request);
     }
 

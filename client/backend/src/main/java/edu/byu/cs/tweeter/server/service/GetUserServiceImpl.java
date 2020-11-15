@@ -8,6 +8,10 @@ import edu.byu.cs.tweeter.server.dao.UserDAO;
 public class GetUserServiceImpl implements GetUserService {
     @Override
     public GetUserResponse getUser(GetUserRequest request) {
+        if (request.getUsername() == null) {
+            throw new RuntimeException("BadRequest: " + "No Username");
+        }
+
         return getUserDAO().getUser(request);
     }
 

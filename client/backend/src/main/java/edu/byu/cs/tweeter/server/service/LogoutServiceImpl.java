@@ -8,6 +8,9 @@ import edu.byu.cs.tweeter.server.dao.AuthTokenDAO;
 public class LogoutServiceImpl implements LogoutService {
     @Override
     public LogoutResponse logout(LogoutRequest request) {
+        if (request.getUser() == null) {
+            throw new RuntimeException("BadRequest: " + "No user");
+        }
         return getAuthTokenDAO().logout(request);
     }
 

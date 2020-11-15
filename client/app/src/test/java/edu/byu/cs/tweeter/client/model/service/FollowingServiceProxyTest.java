@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import edu.byu.cs.tweeter.TestWithAuthToken;
-import edu.byu.cs.tweeter.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.FollowingServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
@@ -24,7 +24,7 @@ public class FollowingServiceProxyTest extends TestWithAuthToken {
     private FollowingResponse successResponse;
     private FollowingResponse failureResponse;
 
-    private FollowingServiceProxy followingServiceProxySpy;
+    private FollowingServiceProxy mFollowingServiceProxySpy;
 
     /**
      * Create a FollowingService spy that uses a mock ServerFacade to return known responses to
@@ -54,19 +54,20 @@ public class FollowingServiceProxyTest extends TestWithAuthToken {
         Mockito.when(mockServerFacade.getFollowees(invalidRequest, FollowingServiceProxy.URL_PATH)).thenReturn(failureResponse);
 
         // Create a FollowingService instance and wrap it with a spy that will use the mock service
-        followingServiceProxySpy = Mockito.spy(new FollowingServiceProxy());
-        Mockito.when(followingServiceProxySpy.getServerFacade()).thenReturn(mockServerFacade);
+        mFollowingServiceProxySpy = Mockito.spy(new FollowingServiceProxy());
+        Mockito.when(mFollowingServiceProxySpy.getServerFacade()).thenReturn(mockServerFacade);
     }
 
     /**
      * Verify that for successful requests the {@link FollowingServiceProxy#getFollowees(FollowingRequest)}
      * method returns the same result as the {@link ServerFacade}.
+     * .
      *
      * @throws IOException if an IO error occurs.
      */
     @Test
     public void testGetFollowees_validRequest_correctResponse() throws IOException, TweeterRemoteException {
-        FollowingResponse response = followingServiceProxySpy.getFollowees(validRequest);
+        FollowingResponse response = mFollowingServiceProxySpy.getFollowees(validRequest);
         Assertions.assertEquals(successResponse, response);
     }
 
@@ -78,7 +79,7 @@ public class FollowingServiceProxyTest extends TestWithAuthToken {
      */
     @Test
     public void testGetFollowees_validRequest_loadsProfileImages() throws IOException, TweeterRemoteException {
-        FollowingResponse response = followingServiceProxySpy.getFollowees(validRequest);
+        FollowingResponse response = mFollowingServiceProxySpy.getFollowees(validRequest);
 
         for(User user : response.getFollowees()) {
             Assertions.assertNotNull(user.getImageBytes());
@@ -93,7 +94,7 @@ public class FollowingServiceProxyTest extends TestWithAuthToken {
      */
     @Test
     public void testGetFollowees_invalidRequest_returnsNoFollowees() throws IOException, TweeterRemoteException {
-        FollowingResponse response = followingServiceProxySpy.getFollowees(invalidRequest);
+        FollowingResponse response = mFollowingServiceProxySpy.getFollowees(invalidRequest);
         Assertions.assertEquals(failureResponse, response);
     }
 }
