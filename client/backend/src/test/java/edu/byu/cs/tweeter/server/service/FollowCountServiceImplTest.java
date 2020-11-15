@@ -43,14 +43,14 @@ public class FollowCountServiceImplTest extends TestWithAuthToken {
     }
 
     @Test
-    public void testGetFollowees_validRequest_correctResponse() throws IOException, TweeterRemoteException {
+    public void testGetFollowCount_validRequest_correctResponse() throws IOException, TweeterRemoteException {
         FollowCountResponse response = followCountServiceImplSpy.getFollowCount(request);
         Assertions.assertEquals(expectedResponse.getFollowersCount(), response.getFollowersCount());
         Assertions.assertEquals(expectedResponse.getFollowingCount(), response.getFollowingCount());
     }
 
     @Test
-    public void testGetFollowers_invalidRequest_throwsError() {
+    public void testGetFollowCount_invalidRequest_throwsError() {
         FollowCountRequest invalidRequest = new FollowCountRequest(null, authToken);
 
         String failureResponse = "BadRequest: " + "No user";

@@ -47,7 +47,7 @@ public class FollowerServiceImplTest extends TestWithAuthToken {
     }
 
     @Test
-    public void testGetFollowees_validRequest_correctResponse() throws IOException, TweeterRemoteException {
+    public void testGetFollowers_validRequest_correctResponse() throws IOException, TweeterRemoteException {
         FollowerResponse response = followerServiceImplSpy.getFollowers(request);
         Assertions.assertEquals(expectedResponse, response);
     }

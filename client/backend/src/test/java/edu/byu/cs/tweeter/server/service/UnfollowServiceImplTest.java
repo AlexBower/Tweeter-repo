@@ -7,55 +7,54 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
-import edu.byu.cs.tweeter.model.service.request.FollowRequest;
-import edu.byu.cs.tweeter.model.service.response.FollowResponse;
+import edu.byu.cs.tweeter.model.service.request.UnfollowRequest;
+import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
 import edu.byu.cs.tweeter.server.TestWithAuthToken;
 import edu.byu.cs.tweeter.server.dao.FollowDAO;
 
-public class FollowServiceImplTest extends TestWithAuthToken {
+public class UnfollowServiceImplTest extends TestWithAuthToken {
 
-    private FollowRequest request;
-    private FollowResponse expectedResponse;
+    private UnfollowRequest request;
+    private UnfollowResponse expectedResponse;
     private FollowDAO mockFollowDAO;
-    private FollowServiceImpl followServiceImplSpy;
+    private UnfollowServiceImpl unfollowServiceImplSpy;
 
     @BeforeEach
     public void setup() {
         User currentUser = new User("FirstName", "LastName", null);
 
         User otherUser = new User("FirstName1", "LastName1",
-                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+                null);
 
         // Setup a request object to use in the tests
-        request = new FollowRequest(currentUser, otherUser, authToken);
+        request = new UnfollowRequest(currentUser, otherUser, authToken);
 
         // Setup a mock FollowDAO that will return known responses
-        expectedResponse = new FollowResponse(true);
+        expectedResponse = new UnfollowResponse(true);
         mockFollowDAO = Mockito.mock(FollowDAO.class);
-        Mockito.when(mockFollowDAO.follow(request)).thenReturn(expectedResponse);
+        Mockito.when(mockFollowDAO.unfollow(request)).thenReturn(expectedResponse);
 
-        followServiceImplSpy = Mockito.spy(FollowServiceImpl.class);
-        Mockito.when(followServiceImplSpy.getFollowDAO()).thenReturn(mockFollowDAO);
+        unfollowServiceImplSpy = Mockito.spy(UnfollowServiceImpl.class);
+        Mockito.when(unfollowServiceImplSpy.getFollowDAO()).thenReturn(mockFollowDAO);
     }
 
     @Test
-    public void testGetFollow_validRequest_correctResponse() throws IOException, TweeterRemoteException {
-        FollowResponse response = followServiceImplSpy.follow(request);
+    public void testUnfollow_validRequest_correctResponse() throws IOException, TweeterRemoteException {
+        UnfollowResponse response = unfollowServiceImplSpy.unfollow(request);
         Assertions.assertEquals(expectedResponse, response);
     }
 
     @Test
-    public void testGetFollow_invalidRequest_throwsError() {
-        FollowRequest invalidRequest = new FollowRequest(null, null, authToken);
+    public void testUnfollow_invalidRequest_throwsError() {
+        UnfollowRequest invalidRequest = new UnfollowRequest(null, null, authToken);
 
         String failureResponse = "BadRequest: " + "No user";
         try {
             Assertions.assertThrows(RuntimeException.class
-                    , (Executable) followServiceImplSpy.follow(invalidRequest)
+                    , (Executable) unfollowServiceImplSpy.unfollow(invalidRequest)
                     , failureResponse);
         } catch (Exception e) {
             Assertions.assertEquals(failureResponse, e.getMessage());
