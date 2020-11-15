@@ -17,6 +17,9 @@ import edu.byu.cs.tweeter.server.dao.UserDAO;
 
 public class LoginServiceImplTest extends TestWithAuthToken {
 
+    private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
+    private final User user = new User("Testing", "User", MALE_IMAGE_URL);
+
     private LoginRequest request;
     private LoginResponse expectedResponse;
     private UserDAO mockUserDAO;
@@ -24,12 +27,10 @@ public class LoginServiceImplTest extends TestWithAuthToken {
 
     @BeforeEach
     public void setup() {
-        User responseUser = new User("FirstName", "LastName", null);
-
         // Setup a request object to use in the tests
         request = new LoginRequest("FirstName", "password");
 
-        expectedResponse = new LoginResponse(responseUser, authToken);
+        expectedResponse = new LoginResponse(user, authToken);
         mockUserDAO = Mockito.mock(UserDAO.class);
         Mockito.when(mockUserDAO.login(request)).thenReturn(expectedResponse);
 
@@ -38,13 +39,13 @@ public class LoginServiceImplTest extends TestWithAuthToken {
     }
 
     @Test
-    public void testGetUser_validRequest_correctResponse() throws IOException, TweeterRemoteException {
+    public void testLogin_validRequest_correctResponse() throws IOException, TweeterRemoteException {
         LoginResponse response = loginServiceImplSpy.login(request);
         Assertions.assertEquals(expectedResponse, response);
     }
 
     @Test
-    public void testGetUser_invalidRequest_throwsError() {
+    public void testLogin_invalidRequest_throwsError() {
         LoginRequest invalidRequest = new LoginRequest(null, null);
 
         String failureResponse = "BadRequest: " + "No username and/or password";
