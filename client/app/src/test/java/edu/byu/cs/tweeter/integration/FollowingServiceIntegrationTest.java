@@ -12,11 +12,11 @@ import java.util.List;
 import edu.byu.cs.tweeter.TestWithAuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
-import edu.byu.cs.tweeter.model.service.FollowerServiceProxy;
-import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
-import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
+import edu.byu.cs.tweeter.model.service.FollowingServiceProxy;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 
-public class FollowerServiceIntegrationTest extends TestWithAuthToken {
+public class FollowingServiceIntegrationTest extends TestWithAuthToken {
 
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private static final String FEMALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png";
@@ -32,47 +32,47 @@ public class FollowerServiceIntegrationTest extends TestWithAuthToken {
     private final User user9 = new User("Elliott", "Enderson", MALE_IMAGE_URL);
     private final User user10 = new User("Elizabeth", "Engle", FEMALE_IMAGE_URL);
 
-    private FollowerRequest validRequest;
-    private FollowerRequest invalidRequest;
+    private FollowingRequest validRequest;
+    private FollowingRequest invalidRequest;
 
-    private FollowerResponse successResponse;
+    private FollowingResponse successResponse;
     private String failureResponse;
 
-    private FollowerServiceProxy mFollowerServiceProxy;
+    private FollowingServiceProxy mFollowingServiceProxy;
 
     @BeforeEach
     public void setup() throws IOException, TweeterRemoteException {
         User currentUser = new User("FirstName", "LastName", null);
 
         // Setup request objects to use in the tests
-        validRequest = new FollowerRequest(currentUser, 10, null, authToken);
-        invalidRequest = new FollowerRequest(null, 0, null, authToken);
+        validRequest = new FollowingRequest(currentUser, 10, null, authToken);
+        invalidRequest = new FollowingRequest(null, 0, null, authToken);
 
-        successResponse = new FollowerResponse(getDummyFollowers(), true);
+        successResponse = new FollowingResponse(getDummyFollowees(), true);
 
         failureResponse = "BadRequest: " + "No user";
 
-        mFollowerServiceProxy = new FollowerServiceProxy();
+        mFollowingServiceProxy = new FollowingServiceProxy();
     }
 
     @Test
-    public void testGetFollowers_validRequest_correctResponse() throws IOException, TweeterRemoteException {
-        FollowerResponse response = mFollowerServiceProxy.getFollowers(validRequest);
+    public void testGetFollowees_validRequest_correctResponse() throws IOException, TweeterRemoteException {
+        FollowingResponse response = mFollowingServiceProxy.getFollowees(validRequest);
         Assertions.assertEquals(successResponse, response);
     }
 
     @Test
-    public void testGetFollowers_invalidRequest_throwsError() {
+    public void testGetFollowees_invalidRequest_throwsError() {
         try {
             Assertions.assertThrows(RuntimeException.class
-                    , (Executable) mFollowerServiceProxy.getFollowers(invalidRequest)
+                    , (Executable) mFollowingServiceProxy.getFollowees(invalidRequest)
                     , failureResponse);
         } catch (Exception e) {
             Assertions.assertEquals(failureResponse, e.getMessage());
         }
     }
 
-    List<User> getDummyFollowers() {
+    List<User> getDummyFollowees() {
         return Arrays.asList(user1, user2, user3, user4, user5, user6, user7,
                 user8, user9, user10);
     }
