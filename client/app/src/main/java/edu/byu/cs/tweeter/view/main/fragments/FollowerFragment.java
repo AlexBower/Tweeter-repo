@@ -19,7 +19,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
-import edu.byu.cs.tweeter.client.presenter.FollowerPresenter;
+import edu.byu.cs.tweeter.presenter.FollowerPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowerTask;
 
 public class FollowerFragment extends FollowFragment implements FollowerPresenter.View {

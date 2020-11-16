@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
-import edu.byu.cs.tweeter.client.presenter.MainPresenter;
+import edu.byu.cs.tweeter.presenter.MainPresenter;
 
 public class LogoutTask extends AsyncTask<LogoutRequest, Void, LogoutResponse> {
 

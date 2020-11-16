@@ -14,6 +14,7 @@ import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.FollowerServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
+import edu.byu.cs.tweeter.presenter.FollowerPresenter;
 
 public class FollowerPresenterTest extends TestWithAuthToken {
 

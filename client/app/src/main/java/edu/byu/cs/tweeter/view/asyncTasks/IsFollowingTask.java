@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.model.service.request.IsFollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.IsFollowingResponse;
-import edu.byu.cs.tweeter.client.presenter.UserPresenter;
+import edu.byu.cs.tweeter.presenter.UserPresenter;
 
 public class IsFollowingTask extends AsyncTask<IsFollowingRequest, Void, IsFollowingResponse> {
 

@@ -19,6 +19,7 @@ import edu.byu.cs.tweeter.model.service.request.UnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 import edu.byu.cs.tweeter.model.service.response.IsFollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
+import edu.byu.cs.tweeter.presenter.UserPresenter;
 
 public class UserPresenterTest extends TestWithAuthToken {
 

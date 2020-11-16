@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.client.presenter;
+package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
@@ -29,12 +29,12 @@ public class MainPresenter extends FollowCountPresenter{
         return logoutService.logout(request);
     }
 
-    LogoutServiceProxy getLogoutService() { return new LogoutServiceProxy(); }
+    public LogoutServiceProxy getLogoutService() { return new LogoutServiceProxy(); }
 
     public PostStatusResponse postStatus(PostStatusRequest request) throws IOException, TweeterRemoteException {
         PostStatusServiceProxy postStatusService = getPostStatusService();
         return postStatusService.postStatus(request);
     }
 
-    PostStatusServiceProxy getPostStatusService() { return new PostStatusServiceProxy(); }
+    public PostStatusServiceProxy getPostStatusService() { return new PostStatusServiceProxy(); }
 }

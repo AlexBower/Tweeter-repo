@@ -17,6 +17,7 @@ import edu.byu.cs.tweeter.model.service.StatusServiceProxy;
 import edu.byu.cs.tweeter.model.service.TimeFormatter;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
+import edu.byu.cs.tweeter.presenter.StoryPresenter;
 
 public class StoryPresenterTest extends TestWithAuthToken {
 

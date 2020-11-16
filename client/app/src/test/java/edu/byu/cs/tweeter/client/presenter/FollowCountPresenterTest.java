@@ -13,6 +13,7 @@ import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.FollowCountServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.FollowCountRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
+import edu.byu.cs.tweeter.presenter.FollowCountPresenter;
 
 public class FollowCountPresenterTest extends TestWithAuthToken {
 

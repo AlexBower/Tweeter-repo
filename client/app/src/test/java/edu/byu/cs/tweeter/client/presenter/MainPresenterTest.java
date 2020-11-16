@@ -20,6 +20,7 @@ import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
+import edu.byu.cs.tweeter.presenter.MainPresenter;
 
 public class MainPresenterTest extends TestWithAuthToken {
 

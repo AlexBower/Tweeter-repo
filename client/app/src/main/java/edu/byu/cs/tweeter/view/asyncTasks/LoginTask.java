@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
-import edu.byu.cs.tweeter.client.presenter.LoginPresenter;
+import edu.byu.cs.tweeter.presenter.LoginPresenter;
 
 public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
 

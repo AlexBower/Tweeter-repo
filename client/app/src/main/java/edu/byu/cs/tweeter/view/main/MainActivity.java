@@ -35,7 +35,7 @@ import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
-import edu.byu.cs.tweeter.client.presenter.MainPresenter;
+import edu.byu.cs.tweeter.presenter.MainPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.PostStatusTask;
 import edu.byu.cs.tweeter.view.login.LoginActivity;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowCountTask;

@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.client.presenter;
+package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
@@ -23,5 +23,5 @@ public class RegisterPresenter {
         return registerService.register(registerRequest);
     }
 
-    RegisterServiceProxy getRegisterService() { return new RegisterServiceProxy(); }
+    public RegisterServiceProxy getRegisterService() { return new RegisterServiceProxy(); }
 }

@@ -13,6 +13,7 @@ import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.GetUserServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.service.response.GetUserResponse;
+import edu.byu.cs.tweeter.presenter.PaginatedPresenter;
 
 public class PaginatedPresenterTest extends TestWithAuthToken {
 

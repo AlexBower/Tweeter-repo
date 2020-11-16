@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.client.presenter;
+package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
@@ -32,19 +32,19 @@ public class UserPresenter extends FollowCountPresenter{
         return isFollowingService.isFollowing(request);
     }
 
-    IsFollowingServiceProxy getIsFollowingService() { return new IsFollowingServiceProxy(); }
+    public IsFollowingServiceProxy getIsFollowingService() { return new IsFollowingServiceProxy(); }
 
     public FollowResponse follow(FollowRequest request) throws IOException, TweeterRemoteException {
         FollowServiceProxy followService = getFollowService();
         return followService.follow(request);
     }
 
-    FollowServiceProxy getFollowService() { return new FollowServiceProxy(); }
+    public FollowServiceProxy getFollowService() { return new FollowServiceProxy(); }
 
     public UnfollowResponse unfollow(UnfollowRequest request) throws IOException, TweeterRemoteException {
         UnfollowServiceProxy unfollowService = getUnfollowService();
         return unfollowService.unfollow(request);
     }
 
-    UnfollowServiceProxy getUnfollowService() { return new UnfollowServiceProxy(); }
+    public UnfollowServiceProxy getUnfollowService() { return new UnfollowServiceProxy(); }
 }

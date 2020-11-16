@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
-import edu.byu.cs.tweeter.client.presenter.FeedPresenter;
+import edu.byu.cs.tweeter.presenter.FeedPresenter;
 
 public class GetFeedTask extends AsyncTask<StatusRequest, Void, StatusResponse> {
 

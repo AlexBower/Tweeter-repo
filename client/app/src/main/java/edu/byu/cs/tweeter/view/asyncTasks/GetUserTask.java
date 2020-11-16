@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.model.service.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.service.response.GetUserResponse;
-import edu.byu.cs.tweeter.client.presenter.PaginatedPresenter;
+import edu.byu.cs.tweeter.presenter.PaginatedPresenter;
 
 public class GetUserTask extends AsyncTask<GetUserRequest, Void, GetUserResponse> {
 

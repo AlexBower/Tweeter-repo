@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.client.presenter;
+package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ public class FollowCountPresenter {
 
     private final View view;
 
-    protected FollowCountPresenter(View view) {
+    public FollowCountPresenter(View view) {
         this.view = view;
     }
 
@@ -24,5 +24,5 @@ public class FollowCountPresenter {
         return followCountService.getFollowCount(request);
     }
 
-    FollowCountServiceProxy getFollowCountService() { return new FollowCountServiceProxy(); }
+    public FollowCountServiceProxy getFollowCountService() { return new FollowCountServiceProxy(); }
 }

@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.client.presenter;
+package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
@@ -24,7 +24,7 @@ public class FollowerPresenter {
         return followerService.getFollowers(request);
     }
 
-    FollowerServiceProxy getFollowerService() {
+    public FollowerServiceProxy getFollowerService() {
         return new FollowerServiceProxy();
     }
 }

@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.client.presenter;
+package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
@@ -41,5 +41,5 @@ public class LoginPresenter {
         return loginService.login(loginRequest);
     }
 
-    LoginServiceProxy getLoginService() { return new LoginServiceProxy(); }
+    public LoginServiceProxy getLoginService() { return new LoginServiceProxy(); }
 }
