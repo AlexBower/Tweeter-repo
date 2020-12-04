@@ -12,7 +12,8 @@ public class GetUserServiceImpl implements GetUserService {
             throw new RuntimeException("BadRequest: " + "No Username");
         }
 
-        return getUserDAO().getUser(request);
+
+        return getUserDAO().getUser(request.getUsername());
     }
 
     UserDAO getUserDAO() {

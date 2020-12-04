@@ -11,7 +11,8 @@ public class LogoutServiceImpl implements LogoutService {
         if (request.getUser() == null) {
             throw new RuntimeException("BadRequest: " + "No user");
         }
-        return getAuthTokenDAO().logout(request);
+        return new LogoutResponse(getAuthTokenDAO()
+                .deleteAuthToken(request.getUser().getAlias(), request.getAuthToken().getToken()));
     }
 
     AuthTokenDAO getAuthTokenDAO() {
