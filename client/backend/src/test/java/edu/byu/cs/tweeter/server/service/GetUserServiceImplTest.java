@@ -13,7 +13,6 @@ import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.service.response.GetUserResponse;
 import edu.byu.cs.tweeter.server.TestWithAuthToken;
-import edu.byu.cs.tweeter.server.dao.FollowDAO;
 import edu.byu.cs.tweeter.server.dao.UserDAO;
 
 public class GetUserServiceImplTest extends TestWithAuthToken {
@@ -28,7 +27,7 @@ public class GetUserServiceImplTest extends TestWithAuthToken {
         User responseUser = new User("FirstName", "LastName", null);
 
         // Setup a request object to use in the tests
-        request = new GetUserRequest("FirstName", authToken);
+        request = new GetUserRequest("currentAlias", "FirstName", authToken);
 
         expectedResponse = new GetUserResponse(responseUser);
         mockUserDAO = Mockito.mock(UserDAO.class);
@@ -46,7 +45,7 @@ public class GetUserServiceImplTest extends TestWithAuthToken {
 
     @Test
     public void testGetUser_invalidRequest_throwsError() {
-        GetUserRequest invalidRequest = new GetUserRequest(null, authToken);
+        GetUserRequest invalidRequest = new GetUserRequest("currentAlias", null, authToken);
 
         String failureResponse = "BadRequest: " + "No Username";
         try {

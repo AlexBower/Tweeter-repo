@@ -5,34 +5,22 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectResult;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Map;
 
-import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.service.request.GetUserRequest;
-import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
-import edu.byu.cs.tweeter.model.service.response.GetUserResponse;
-import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
 
 public class UserDAO {
-
-    private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
-    private final User test_boi = new User("Testing", "User", MALE_IMAGE_URL);
-    private final User regi_boi = new User("Regi", "Boi", MALE_IMAGE_URL);
-
-    private AuthToken test_authToken = new AuthToken("brilliantly_secure_token");
-
-
+    //private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
+    //private final User test_boi = new User("Testing", "User", MALE_IMAGE_URL);
+    //private final User regi_boi = new User("Regi", "Boi", MALE_IMAGE_URL);
+    //private AuthToken test_authToken = new AuthToken("brilliantly_secure_token");
 
     private static final String tableName = "User";
 
@@ -42,6 +30,8 @@ public class UserDAO {
     private static final String firstNameAttr = "firstName";
     private static final String lastNameAttr = "lastName";
     private static final String imageUrlAttr = "imageUrl";
+    private static final String followerCountAttr = "followerCount";
+    private static final String followeeCountAttr = "followeeCount";
 
     private static AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder
             .standard()
@@ -134,12 +124,46 @@ public class UserDAO {
                 .withString(saltAttr, salt)
                 .withString(firstNameAttr, firstName)
                 .withString(lastNameAttr, lastName)
-                .withString(imageUrlAttr, imageUrl);
+                .withString(imageUrlAttr, imageUrl)
+                .withNumber(followerCountAttr, 0)
+                .withNumber(followeeCountAttr, 0);
         try {
             table.putItem(item);
         } catch (Exception e) {
             throw new RuntimeException("InternalServerError: " + e.getMessage());
         }
         return new User(firstName, lastName, alias, imageUrl);
+    }
+
+    public Integer getFollowerCount(String followeeAlias) {
+        Table table = dynamoDB.getTable(tableName);
+
+        Item item = table.getItem(aliasAttr, followeeAlias);
+        if (item == null) {
+            throw new RuntimeException("BadRequest: No User Found");
+        }
+        else {
+            try {
+                return item.getInt(followerCountAttr);
+            } catch (Exception e) {
+                throw new RuntimeException("InternalServerError: " + e.getMessage());
+            }
+        }
+    }
+
+    public Integer getFolloweeCount(String followerAlias) {
+        Table table = dynamoDB.getTable(tableName);
+
+        Item item = table.getItem(aliasAttr, followerAlias);
+        if (item == null) {
+            throw new RuntimeException("BadRequest: No User Found");
+        }
+        else {
+            try {
+                return item.getInt(followeeCountAttr);
+            } catch (Exception e) {
+                throw new RuntimeException("InternalServerError: " + e.getMessage());
+            }
+        }
     }
 }

@@ -29,8 +29,8 @@ public class GetUserServiceIntegrationTest extends TestWithAuthToken {
         User currentUser = new User("FirstName", "LastName", null);
 
         // Setup request objects to use in the tests
-        validRequest = new GetUserRequest("currentUser", authToken);
-        invalidRequest = new GetUserRequest(null, authToken);
+        validRequest = new GetUserRequest("currentAlias", "currentUser", authToken);
+        invalidRequest = new GetUserRequest(null, null, authToken);
 
         successResponse = new GetUserResponse(currentUser);
 

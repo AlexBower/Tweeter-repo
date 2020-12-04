@@ -31,8 +31,8 @@ public class GetUserServiceProxyTest extends TestWithAuthToken {
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
 
         // Setup request objects to use in the tests
-        validRequest = new GetUserRequest("@Test", authToken);
-        invalidRequest = new GetUserRequest( null, authToken);
+        validRequest = new GetUserRequest("currentAlias", "@Test", authToken);
+        invalidRequest = new GetUserRequest(null, null, authToken);
 
         // Setup a mock ServerFacade that will return known responses
         successResponse = new GetUserResponse(resultUser);

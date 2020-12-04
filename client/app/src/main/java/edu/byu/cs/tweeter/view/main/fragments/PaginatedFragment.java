@@ -48,7 +48,7 @@ abstract public class PaginatedFragment extends Fragment implements PaginatedPre
                 return;
             }
             GetUserTask getUserTask = new GetUserTask(mPaginatedPresenter, this);
-            getUserTask.execute(new GetUserRequest(userAlias, authToken));
+            getUserTask.execute(new GetUserRequest(MainActivity.loggedInUser.getAlias(), userAlias, authToken));
         }
     }
 

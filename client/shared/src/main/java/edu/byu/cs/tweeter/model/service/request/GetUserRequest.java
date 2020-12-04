@@ -4,15 +4,25 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 
 public class GetUserRequest {
 
+    private String currentAlias;
     private String username;
     private AuthToken authToken;
 
     private GetUserRequest() {
     }
 
-    public GetUserRequest(String username, AuthToken authToken) {
+    public GetUserRequest(String currentAlias, String username, AuthToken authToken) {
+        this.currentAlias = currentAlias;
         this.username = username;
         this.authToken = authToken;
+    }
+
+    public String getCurrentAlias() {
+        return currentAlias;
+    }
+
+    public void setCurrentAlias(String currentAlias) {
+        this.currentAlias = currentAlias;
     }
 
     public String getUsername() {

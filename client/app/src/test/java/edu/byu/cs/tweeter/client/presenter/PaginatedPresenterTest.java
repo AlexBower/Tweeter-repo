@@ -27,7 +27,7 @@ public class PaginatedPresenterTest extends TestWithAuthToken {
         User resultUser = new User("FirstName", "LastName", "@Test",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
 
-        request = new GetUserRequest("@Test", authToken);
+        request = new GetUserRequest("currentAlias", "@Test", authToken);
         response = new GetUserResponse(resultUser);
 
         mMockGetUserServiceProxy = Mockito.mock(GetUserServiceProxy.class);

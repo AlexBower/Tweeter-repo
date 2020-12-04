@@ -13,10 +13,10 @@ public class GetUserServiceImpl implements GetUserService {
             throw new RuntimeException("BadRequest: " + "No Username");
         }
 
-        if (getAuthTokenDAO().checkAuthToken(request.getUsername(), request.getAuthToken().getToken())) {
-            return new GetUserResponse(getUserDAO().getUser(request.getUsername()));
+        if (!getAuthTokenDAO().checkAuthToken(request.getCurrentAlias(), request.getAuthToken().getToken())) {
+            throw new RuntimeException("BadRequest: Invalid or Expired AuthToken");
         }
-        return null;
+        return new GetUserResponse(getUserDAO().getUser(request.getUsername()));
     }
 
     UserDAO getUserDAO() {
