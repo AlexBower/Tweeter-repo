@@ -2,11 +2,11 @@ package edu.byu.cs.tweeter.model.service.response;
 
 public class IsFollowingResponse extends Response {
 
-    private boolean isFollowing;
+    private boolean following;
 
-    public IsFollowingResponse(boolean isFollowing) {
+    public IsFollowingResponse(boolean following) {
         super(true, "");
-        this.isFollowing = isFollowing;
+        this.following = following;
     }
 
     public IsFollowingResponse(String message) {
@@ -14,6 +14,6 @@ public class IsFollowingResponse extends Response {
     }
 
     public boolean isFollowing() {
-        return isFollowing;
+        return following;
     }
 }

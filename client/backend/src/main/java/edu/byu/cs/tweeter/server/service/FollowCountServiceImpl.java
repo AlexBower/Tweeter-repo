@@ -20,8 +20,8 @@ public class FollowCountServiceImpl implements FollowCountService {
 
         UserDAO userDAO = getUserDAO();
         return new FollowCountResponse(
-                userDAO.getFollowerCount(request.getUser().getAlias()),
-                userDAO.getFolloweeCount(request.getUser().getAlias()));
+                userDAO.getFollowCount(request.getUser().getAlias(), UserDAO.followerCountAttr),
+                userDAO.getFollowCount(request.getUser().getAlias(), UserDAO.followeeCountAttr));
     }
 
     UserDAO getUserDAO() {

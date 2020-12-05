@@ -94,6 +94,9 @@ public class UserActivity extends AppCompatActivity implements
         followButton = findViewById(R.id.followButton);
         followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!followButton.isEnabled()) {
+                    return;
+                }
                 followButton.setEnabled(false);
                 if (isChecked) {
                     // The toggle is checked, follow user
@@ -141,8 +144,8 @@ public class UserActivity extends AppCompatActivity implements
 
     @Override
     public void followRetrieved(FollowResponse followResponse) {
-        updateFollowButton();
         updateFollowCount();
+        followButton.setEnabled(true);
     }
 
     @Override
@@ -153,8 +156,8 @@ public class UserActivity extends AppCompatActivity implements
 
     @Override
     public void unfollowRetrieved(UnfollowResponse unfollowResponse) {
-        updateFollowButton();
         updateFollowCount();
+        followButton.setEnabled(true);
     }
 
     @Override

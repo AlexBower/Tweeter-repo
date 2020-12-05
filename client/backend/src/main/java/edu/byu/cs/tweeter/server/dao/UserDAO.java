@@ -2,9 +2,12 @@ package edu.byu.cs.tweeter.server.dao;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.AttributeUpdate;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
+import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -30,8 +33,8 @@ public class UserDAO {
     private static final String firstNameAttr = "firstName";
     private static final String lastNameAttr = "lastName";
     private static final String imageUrlAttr = "imageUrl";
-    private static final String followerCountAttr = "followerCount";
-    private static final String followeeCountAttr = "followeeCount";
+    public static final String followerCountAttr = "followerCount";
+    public static final String followeeCountAttr = "followeeCount";
 
     private static AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder
             .standard()
@@ -135,35 +138,36 @@ public class UserDAO {
         return new User(firstName, lastName, alias, imageUrl);
     }
 
-    public Integer getFollowerCount(String followeeAlias) {
+    public Integer getFollowCount(String alias, String followCountAttr) {
         Table table = dynamoDB.getTable(tableName);
 
-        Item item = table.getItem(aliasAttr, followeeAlias);
+        Item item = table.getItem(aliasAttr, alias);
         if (item == null) {
             throw new RuntimeException("BadRequest: No User Found");
         }
         else {
             try {
-                return item.getInt(followerCountAttr);
+                return item.getInt(followCountAttr);
             } catch (Exception e) {
                 throw new RuntimeException("InternalServerError: " + e.getMessage());
             }
         }
     }
 
-    public Integer getFolloweeCount(String followerAlias) {
+    public void addToFollowCount(String alias, String followCountAttr, int addNumber) {
+        int newFollowCount = getFollowCount(alias, followCountAttr) + addNumber;
+
         Table table = dynamoDB.getTable(tableName);
 
-        Item item = table.getItem(aliasAttr, followerAlias);
-        if (item == null) {
-            throw new RuntimeException("BadRequest: No User Found");
+        UpdateItemSpec updateItemSpec = new UpdateItemSpec()
+                .withPrimaryKey(aliasAttr, alias)
+                .addAttributeUpdate(new AttributeUpdate(followCountAttr).put(newFollowCount))
+                .withReturnValues(ReturnValue.UPDATED_NEW);
+        try {
+            table.updateItem(updateItemSpec);
         }
-        else {
-            try {
-                return item.getInt(followeeCountAttr);
-            } catch (Exception e) {
-                throw new RuntimeException("InternalServerError: " + e.getMessage());
-            }
+        catch (Exception e) {
+            throw new RuntimeException("InternalServerError: " + e.getMessage());
         }
     }
 }
