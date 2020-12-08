@@ -78,60 +78,6 @@ public class FollowDAO {
         return (value != null && value.length() > 0);
     }
 
-    //public FollowerResponse getFollowers(FollowerRequest request) {
-    //    Table table = dynamoDB.getTable(tableName);
-    //    Index index = table.getIndex(indexName);
-//
-    //    System.out.println("request limit: " + request.getLimit());
-    //    System.out.println("request last follower: " + request.getLastFollower());
-    //    System.out.println("request followee: " + request.getFollowee());
-//
-    //    QuerySpec querySpec = new QuerySpec()
-    //            .withHashKey(followeeAliasAttr,
-    //                    request.getFollowee().getAlias())
-    //            .withMaxPageSize(request.getLimit())
-    //            .withScanIndexForward(true);
-    //    System.out.println("1");
-    //    if (request.getLastFollower() != null) {
-    //        querySpec.withExclusiveStartKey(followeeAliasAttr,
-    //                request.getFollowee().getAlias(),
-    //                followerAliasAttr,
-    //                request.getLastFollower().getAlias());
-    //        System.out.println("2");
-    //    }
-//
-    //    ItemCollection<QueryOutcome> items = null;
-    //    Iterator<Item> iterator = null;
-    //    Item item = null;
-    //    boolean hasMorePages = true;
-    //    List<User> responseFollowers = new ArrayList<>(request.getLimit());
-//
-    //    try {
-    //        items = index.query(querySpec);
-    //        System.out.println("3");
-    //        if (items != null && items.getLastLowLevelResult().getQueryResult().getLastEvaluatedKey() == null) {
-    //            hasMorePages = false;
-    //        }
-    //        System.out.println("4");
-//
-    //        UserDAO userDAO = new UserDAO();
-//
-    //        if (items != null) {
-    //            iterator = items.iterator();
-    //            while (iterator.hasNext()) {
-    //                item = iterator.next();
-    //                System.out.println("followerAliasAttr: " + item.getString(followerAliasAttr));
-    //                responseFollowers.add(userDAO.getUser(item.getString(followerAliasAttr)));
-    //            }
-    //        }
-    //        System.out.println("5");
-    //    }
-    //    catch (Exception e) {
-    //        throw new RuntimeException("InternalServerError: " + e.getMessage());
-    //    }
-    //    return new FollowerResponse(responseFollowers, hasMorePages);
-    //}
-
     public FollowerResponse getFollowers(FollowerRequest request) {
         Map<String, String> attrNames = new HashMap<String, String>();
         attrNames.put("#fol", followeeAliasAttr);
@@ -162,8 +108,12 @@ public class FollowDAO {
         QueryResult queryResult = amazonDynamoDB.query(queryRequest);
         List<Map<String, AttributeValue>> items = queryResult.getItems();
         if (items != null) {
-            for (Map<String, AttributeValue> item : items){
-                responseFollowers.add(userDAO.getUser(item.get(followerAliasAttr).getS()));
+            List<String> userAliases = new ArrayList<>();
+            for (Map<String, AttributeValue> item : items) {
+                userAliases.add(item.get(followerAliasAttr).getS());
+            }
+            if (!userAliases.isEmpty()) {
+                responseFollowers = userDAO.getUsers(userAliases);
             }
         }
 
@@ -174,51 +124,6 @@ public class FollowDAO {
 
         return new FollowerResponse(responseFollowers, hasMorePages);
     }
-
-    //public FollowingResponse getFollowees(FollowingRequest request) {
-    //    Table table = dynamoDB.getTable(tableName);
-//
-    //    QuerySpec querySpec = new QuerySpec()
-    //            .withHashKey(followerAliasAttr,
-    //                    request.getFollower().getAlias())
-    //            .withMaxPageSize(request.getLimit())
-    //            .withScanIndexForward(true);
-    //    if (request.getLastFollowee() != null) {
-    //        querySpec.withExclusiveStartKey(followerAliasAttr,
-    //                request.getFollower().getAlias(),
-    //                followeeAliasAttr,
-    //                request.getLastFollowee().getAlias());
-    //    }
-//
-    //    ItemCollection<QueryOutcome> items = null;
-    //    Iterator<Item> iterator = null;
-    //    Item item = null;
-    //    boolean hasMorePages = true;
-    //    List<User> responseFollowees = new ArrayList<>(request.getLimit());
-//
-    //    try {
-    //        items = table.query(querySpec);
-//
-    //        if (items != null && items.getLastLowLevelResult().getQueryResult().getLastEvaluatedKey() == null) {
-    //            hasMorePages = false;
-    //        }
-//
-    //        UserDAO userDAO = new UserDAO();
-//
-    //        if (items != null) {
-    //            iterator = items.iterator();
-    //            while (iterator.hasNext()) {
-    //                item = iterator.next();
-    //                System.out.println("followeeAliasAttr: " + item.getString(followeeAliasAttr));
-    //                responseFollowees.add(userDAO.getUser(item.getString(followeeAliasAttr)));
-    //            }
-    //        }
-    //    }
-    //    catch (Exception e) {
-    //        throw new RuntimeException("InternalServerError: " + e.getMessage());
-    //    }
-    //    return new FollowingResponse(responseFollowees, hasMorePages);
-    //}
 
     public FollowingResponse getFollowees(FollowingRequest request) {
         Map<String, String> attrNames = new HashMap<String, String>();
@@ -249,8 +154,12 @@ public class FollowDAO {
         QueryResult queryResult = amazonDynamoDB.query(queryRequest);
         List<Map<String, AttributeValue>> items = queryResult.getItems();
         if (items != null) {
+            List<String> userAliases = new ArrayList<>();
             for (Map<String, AttributeValue> item : items) {
-                responseFollowees.add(userDAO.getUser(item.get(followeeAliasAttr).getS()));
+                userAliases.add(item.get(followeeAliasAttr).getS());
+            }
+            if (!userAliases.isEmpty()) {
+                responseFollowees = userDAO.getUsers(userAliases);
             }
         }
 

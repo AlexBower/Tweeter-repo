@@ -3,10 +3,13 @@ package edu.byu.cs.tweeter.server.dao;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.AttributeUpdate;
+import com.amazonaws.services.dynamodbv2.document.BatchGetItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.TableKeysAndAttributes;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
+import com.amazonaws.services.dynamodbv2.model.KeysAndAttributes;
 import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -16,6 +19,9 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -93,6 +99,42 @@ public class UserDAO {
                 throw new RuntimeException("InternalServerError: " + e.getMessage());
             }
         }
+    }
+
+    public List<User> getUsers(List<String> userAliases) {
+        TableKeysAndAttributes tableKeysAndAttributes = new TableKeysAndAttributes(tableName);
+        // Add a partition key
+        tableKeysAndAttributes.addHashOnlyPrimaryKeys(aliasAttr, userAliases.toArray());
+
+        List<User> returnUsers = new ArrayList<>();
+
+        try {
+            BatchGetItemOutcome outcome = dynamoDB.batchGetItem(tableKeysAndAttributes);
+
+            Map<String, KeysAndAttributes> unprocessed = null;
+
+            do {
+                for (String tableName : outcome.getTableItems().keySet()) {
+                    List<Item> items = outcome.getTableItems().get(tableName);
+                    for (Item item : items) {
+                        returnUsers.add(new User(
+                                item.getString(firstNameAttr),
+                                item.getString(lastNameAttr),
+                                item.getString(aliasAttr),
+                                item.getString(imageUrlAttr)));
+                    }
+                }
+
+                unprocessed = outcome.getUnprocessedKeys();
+
+                if (!unprocessed.isEmpty()) {
+                    outcome = dynamoDB.batchGetItemUnprocessed(unprocessed);
+                }
+            } while (!unprocessed.isEmpty());
+        } catch (Exception e) {
+            throw new RuntimeException("InternalServerError: " + e.getMessage());
+        }
+        return returnUsers;
     }
 
     public User register(String alias,
