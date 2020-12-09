@@ -11,7 +11,6 @@ public class GetStoryHandler implements RequestHandler<StatusRequest, StatusResp
 
     @Override
     public StatusResponse handleRequest(StatusRequest request, Context context) {
-        System.out.println(request.getUser().getImageBytes());
         StatusServiceImpl service = new StatusServiceImpl();
         return service.getStory(request);
     }

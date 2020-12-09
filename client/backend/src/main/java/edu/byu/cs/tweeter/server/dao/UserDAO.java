@@ -134,7 +134,21 @@ public class UserDAO {
         } catch (Exception e) {
             throw new RuntimeException("InternalServerError: " + e.getMessage());
         }
-        return returnUsers;
+
+        return sortUsers(userAliases, returnUsers);
+    }
+
+    private List<User> sortUsers(List<String> orderingList, List<User> sortList) {
+        List<User> sortedList = new ArrayList<>();
+        for (String alias : orderingList) {
+            for (User currentUser : sortList) {
+                if (currentUser.getAlias().equals(alias)) {
+                    sortedList.add(currentUser);
+                    break;
+                }
+            }
+        }
+        return sortedList;
     }
 
     public User register(String alias,

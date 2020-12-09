@@ -2,28 +2,20 @@ package edu.byu.cs.tweeter.server.dao;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.AttributeUpdate;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Index;
 import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.ItemCollection;
-import com.amazonaws.services.dynamodbv2.document.QueryOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
-import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
-import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryResult;
-import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import edu.byu.cs.tweeter.model.domain.AuthToken;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
+
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
@@ -37,30 +29,6 @@ import edu.byu.cs.tweeter.model.service.response.IsFollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
 
 public class FollowDAO {
-
-    //private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
-    //private static final String FEMALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png";
-
-    //private final User user1 = new User("Allen", "Anderson", MALE_IMAGE_URL);
-    //private final User user2 = new User("Amy", "Ames", FEMALE_IMAGE_URL);
-    //private final User user3 = new User("Bob", "Bobson", MALE_IMAGE_URL);
-    //private final User user4 = new User("Bonnie", "Beatty", FEMALE_IMAGE_URL);
-    //private final User user5 = new User("Chris", "Colston", MALE_IMAGE_URL);
-    //private final User user6 = new User("Cindy", "Coats", FEMALE_IMAGE_URL);
-    //private final User user7 = new User("Dan", "Donaldson", MALE_IMAGE_URL);
-    //private final User user8 = new User("Dee", "Dempsey", FEMALE_IMAGE_URL);
-    //private final User user9 = new User("Elliott", "Enderson", MALE_IMAGE_URL);
-    //private final User user10 = new User("Elizabeth", "Engle", FEMALE_IMAGE_URL);
-    //private final User user11 = new User("Frank", "Frandson", MALE_IMAGE_URL);
-    //private final User user12 = new User("Fran", "Franklin", FEMALE_IMAGE_URL);
-    //private final User user13 = new User("Gary", "Gilbert", MALE_IMAGE_URL);
-    //private final User user14 = new User("Giovanna", "Giles", FEMALE_IMAGE_URL);
-    //private final User user15 = new User("Henry", "Henderson", MALE_IMAGE_URL);
-    //private final User user16 = new User("Helen", "Hopwell", FEMALE_IMAGE_URL);
-    //private final User user17 = new User("Igor", "Isaacson", MALE_IMAGE_URL);
-    //private final User user18 = new User("Isabel", "Isaacson", FEMALE_IMAGE_URL);
-    //private final User user19 = new User("Justin", "Jones", MALE_IMAGE_URL);
-    //private final User user20 = new User("Jill", "Johnson", FEMALE_IMAGE_URL);
 
     private static final String tableName = "Follow";
     private static final String indexName = "followeeAlias-followerAlias-index";
@@ -91,7 +59,8 @@ public class FollowDAO {
                 .withKeyConditionExpression("#fol = :followee")
                 .withExpressionAttributeNames(attrNames)
                 .withExpressionAttributeValues(attrValues)
-                .withLimit(request.getLimit());
+                .withLimit(request.getLimit())
+                .withScanIndexForward(true);
 
         if (request.getLastFollower() != null && isNonEmptyString(request.getLastFollower().getAlias())) {
             Map<String, AttributeValue> lastKey = new HashMap<>();
@@ -99,6 +68,8 @@ public class FollowDAO {
             lastKey.put(followerAliasAttr, new AttributeValue().withS(request.getLastFollower().getAlias()));
 
             queryRequest = queryRequest.withExclusiveStartKey(lastKey);
+        } else {
+            queryRequest = queryRequest.withExclusiveStartKey(null);
         }
 
         boolean hasMorePages = true;
@@ -137,7 +108,8 @@ public class FollowDAO {
                 .withKeyConditionExpression("#fol = :follower")
                 .withExpressionAttributeNames(attrNames)
                 .withExpressionAttributeValues(attrValues)
-                .withLimit(request.getLimit());
+                .withLimit(request.getLimit())
+                .withScanIndexForward(true);
 
         if (request.getLastFollowee() != null && isNonEmptyString(request.getLastFollowee().getAlias())) {
             Map<String, AttributeValue> startKey = new HashMap<>();
@@ -145,6 +117,8 @@ public class FollowDAO {
             startKey.put(followeeAliasAttr, new AttributeValue().withS(request.getLastFollowee().getAlias()));
 
             queryRequest = queryRequest.withExclusiveStartKey(startKey);
+        } else {
+            queryRequest = queryRequest.withExclusiveStartKey(null);
         }
 
         boolean hasMorePages = true;
@@ -169,6 +143,33 @@ public class FollowDAO {
         }
 
         return new FollowingResponse(responseFollowees, hasMorePages);
+    }
+
+    public List<String> getAllFollowers(String alias) {
+        Map<String, String> attrNames = new HashMap<String, String>();
+        attrNames.put("#fol", followeeAliasAttr);
+
+        Map<String, AttributeValue> attrValues = new HashMap<>();
+        attrValues.put(":follow", new AttributeValue().withS(alias));
+
+        QueryRequest queryRequest = new QueryRequest()
+                .withTableName(tableName)
+                .withIndexName(indexName)
+                .withKeyConditionExpression("#fol = :follow")
+                .withExpressionAttributeNames(attrNames)
+                .withExpressionAttributeValues(attrValues);
+
+        List<String> responseFollowers = new ArrayList<>();
+        QueryResult queryResult = amazonDynamoDB.query(queryRequest);
+        List<Map<String, AttributeValue>> items = queryResult.getItems();
+        if (items != null) {
+            for (Map<String, AttributeValue> item : items) {
+                System.out.println(item.get(followerAliasAttr).getS());
+                responseFollowers.add(item.get(followerAliasAttr).getS());
+            }
+        }
+
+        return responseFollowers;
     }
 
     public FollowResponse follow(FollowRequest request) {
