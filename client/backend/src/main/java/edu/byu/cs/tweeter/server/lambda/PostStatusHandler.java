@@ -35,10 +35,18 @@ public class PostStatusHandler implements RequestHandler<PostStatusRequest, Post
                 .withQueueUrl(queueUrl)
                 .withMessageBody(messageBody);
 
-        AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
+        AmazonSQS sqs = getAmazonSQS();
         sqs.sendMessage(send_msg_request);
 
-        PostStatusServiceImpl service = new PostStatusServiceImpl();
+        PostStatusServiceImpl service = getPostStatusServiceImpl();
         return service.postStatus(request);
+    }
+
+    public AmazonSQS getAmazonSQS() {
+        return AmazonSQSClientBuilder.defaultClient();
+    }
+
+    public PostStatusServiceImpl getPostStatusServiceImpl() {
+        return new PostStatusServiceImpl();
     }
 }
