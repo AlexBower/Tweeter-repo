@@ -79,7 +79,7 @@ public class AuthTokenDAO {
         return new AuthToken(token);
     }
 
-    public boolean updateAuthTokenExpTime(String alias, String token, Table table) {
+    private boolean updateAuthTokenExpTime(String alias, String token, Table table) {
 
         long newExpTime = Instant.now().getEpochSecond() + (timeOutMinutes * 60);
 
