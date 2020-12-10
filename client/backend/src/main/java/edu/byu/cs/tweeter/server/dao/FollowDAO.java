@@ -2,12 +2,15 @@ package edu.byu.cs.tweeter.server.dao;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.BatchWriteItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.TableWriteItems;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryResult;
+import com.amazonaws.services.dynamodbv2.model.WriteRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,7 +167,6 @@ public class FollowDAO {
         List<Map<String, AttributeValue>> items = queryResult.getItems();
         if (items != null) {
             for (Map<String, AttributeValue> item : items) {
-                System.out.println(item.get(followerAliasAttr).getS());
                 responseFollowers.add(item.get(followerAliasAttr).getS());
             }
         }
@@ -240,6 +242,37 @@ public class FollowDAO {
         else {
             System.out.println("is returning true");
             return new IsFollowingResponse(true);
+        }
+    }
+
+    public void addFollowersBatch(List<String> followers, String followTarget) {
+
+        TableWriteItems items = new TableWriteItems(tableName);
+
+        for (String follower : followers) {
+            Item item = new Item()
+                    .withPrimaryKey(followerAliasAttr, follower, followeeAliasAttr, followTarget);
+            items.addItemToPut(item);
+
+            if (items.getItemsToPut() != null && items.getItemsToPut().size() == 25) {
+                loopBatchWrite(items);
+                items = new TableWriteItems(tableName);
+            }
+        }
+
+        // Write any leftover items
+        if (items.getItemsToPut() != null && items.getItemsToPut().size() > 0) {
+            loopBatchWrite(items);
+        }
+    }
+
+    private void loopBatchWrite(TableWriteItems items) {
+
+        BatchWriteItemOutcome outcome = dynamoDB.batchWriteItem(items);
+
+        while (outcome.getUnprocessedItems().size() > 0) {
+            Map<String, List<WriteRequest>> unprocessedItems = outcome.getUnprocessedItems();
+            outcome = dynamoDB.batchWriteItemUnprocessed(unprocessedItems);
         }
     }
 }

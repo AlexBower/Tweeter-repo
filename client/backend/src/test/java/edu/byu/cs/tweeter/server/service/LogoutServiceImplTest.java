@@ -32,7 +32,7 @@ public class LogoutServiceImplTest extends TestWithAuthToken {
 
         expectedResponse = new LogoutResponse(true);
         mockAuthTokenDAO = Mockito.mock(AuthTokenDAO.class);
-        Mockito.when(mockAuthTokenDAO.logout(request)).thenReturn(expectedResponse);
+        Mockito.when(mockAuthTokenDAO.deleteAuthToken(request.getUser().getAlias(), request.getAuthToken().getToken())).thenReturn(true);
 
         logoutServiceImplSpy = Mockito.spy(LogoutServiceImpl.class);
         Mockito.when(logoutServiceImplSpy.getAuthTokenDAO()).thenReturn(mockAuthTokenDAO);
@@ -41,7 +41,8 @@ public class LogoutServiceImplTest extends TestWithAuthToken {
     @Test
     public void testLogout_validRequest_correctResponse() throws IOException, TweeterRemoteException {
         LogoutResponse response = logoutServiceImplSpy.logout(request);
-        Assertions.assertEquals(expectedResponse, response);
+        Assertions.assertEquals(expectedResponse.isSuccess(), response.isSuccess());
+        Assertions.assertEquals(expectedResponse.getMessage(), response.getMessage());
     }
 
     @Test

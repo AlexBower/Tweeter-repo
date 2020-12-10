@@ -7,6 +7,7 @@ import org.junit.jupiter.api.function.Executable;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,61 +25,14 @@ public class StatusServiceIntegrationTest extends TestWithAuthToken {
 
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
 
-    private final User user = new User("Testing", "User", MALE_IMAGE_URL);
+    private final User user = new User("Status", "Test", MALE_IMAGE_URL);
 
-    private final Status status1 = new Status("Hey, 1 "
-            + user.getAlias()
-            + " check out this really cool url: "
-            + "http://google.com",
-            TimeFormatter.format(LocalDateTime.now()), user);
-    private final Status status2 = new Status("Hey, 2 "
-            + user.getAlias()
-            + " check out this really cool url: "
-            + "http://google.com",
-            TimeFormatter.format(LocalDateTime.now()), user);
-    private final Status status3 = new Status("Hey, 3 "
-            + user.getAlias()
-            + " check out this really cool url: "
-            + "http://google.com",
-            TimeFormatter.format(LocalDateTime.now()), user);
-    private final Status status4 = new Status("Hey, 4 "
-            + user.getAlias()
-            + " check out this really cool url: "
-            + "http://google.com",
-            TimeFormatter.format(LocalDateTime.now()), user);
-    private final Status status5 = new Status("Hey, 5 "
-            + user.getAlias()
-            + " check out this really cool url: "
-            + "http://google.com",
-            TimeFormatter.format(LocalDateTime.now()), user);
-    private final Status status6 = new Status("Hey, 6 "
-            + user.getAlias()
-            + " check out this really cool url: "
-            + "http://google.com",
-            TimeFormatter.format(LocalDateTime.now()), user);
-    private final Status status7 = new Status("Hey, 7 "
-            + user.getAlias()
-            + " check out this really cool url: "
-            + "http://google.com",
-            TimeFormatter.format(LocalDateTime.now()), user);
-    private final Status status8 = new Status("Hey, 8 "
-            + user.getAlias()
-            + " check out this really cool url: "
-            + "http://google.com",
-            TimeFormatter.format(LocalDateTime.now()), user);
-    private final Status status9 = new Status("Hey, 9 "
-            + user.getAlias()
-            + " check out this really cool url: "
-            + "http://google.com",
-            TimeFormatter.format(LocalDateTime.now()), user);
-    private final Status status10 = new Status("Hey, 10 "
-            + user.getAlias()
-            + " check out this really cool url: "
-            + "http://google.com",
-            TimeFormatter.format(LocalDateTime.now()), user);
+    private final Status status1 = new Status("testStatus1",
+            "Dec 10 2020  01:18:03 AM", user);
+    private final Status status2 = new Status("testStatus2",
+            "Dec 10 2020  01:18:04 AM", user);
 
-    private List<Status> dummyStatuses = Arrays.asList(status1, status2, status3, status4, status5, status6, status7,
-            status8, status9, status10);
+    private List<Status> dummyStatuses = Arrays.asList(status2, status1);
 
     private StatusRequest validRequest;
     private StatusRequest invalidRequest;
@@ -90,13 +44,13 @@ public class StatusServiceIntegrationTest extends TestWithAuthToken {
 
     @BeforeEach
     public void setup() throws IOException, TweeterRemoteException {
-        User currentUser = new User("FirstName", "LastName", null);
+        User currentUser = new User("Status", "Test", MALE_IMAGE_URL);
 
         // Setup request objects to use in the tests
         validRequest = new StatusRequest(currentUser, 10, null, authToken);
         invalidRequest = new StatusRequest(null, 0, null, authToken);
 
-        successResponse = new StatusResponse(dummyStatuses, true);
+        successResponse = new StatusResponse(dummyStatuses, false);
 
         failureResponse = "BadRequest: " + "No user";
 

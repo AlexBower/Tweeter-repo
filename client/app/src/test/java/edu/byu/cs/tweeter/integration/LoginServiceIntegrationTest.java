@@ -18,7 +18,7 @@ import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 public class LoginServiceIntegrationTest extends TestWithAuthToken {
 
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
-    private final User user = new User("Testing", "User", MALE_IMAGE_URL);
+    private final User user = new User("FirstName", "LastName", MALE_IMAGE_URL);
 
     private LoginRequest validRequest;
     private LoginRequest invalidRequest;
@@ -30,7 +30,7 @@ public class LoginServiceIntegrationTest extends TestWithAuthToken {
 
     @BeforeEach
     public void setup() throws IOException, TweeterRemoteException {
-        validRequest = new LoginRequest("FirstName", "password");
+        validRequest = new LoginRequest("@FirstNameLastName", "password");
         invalidRequest = new LoginRequest(null, null);
 
         successResponse = new LoginResponse(user, authToken);
@@ -44,6 +44,9 @@ public class LoginServiceIntegrationTest extends TestWithAuthToken {
     public void testLogin_validRequest_correctResponse() throws IOException, TweeterRemoteException {
         LoginResponse response = serviceProxy.login(validRequest);
         Assertions.assertEquals(successResponse.isSuccess(), response.isSuccess());
+        Assertions.assertEquals(successResponse.getUser().getAlias(), response.getUser().getAlias());
+        Assertions.assertEquals(successResponse.getUser().getFirstName(), response.getUser().getFirstName());
+        Assertions.assertEquals(successResponse.getUser().getLastName(), response.getUser().getLastName());
     }
 
     @Test

@@ -92,7 +92,21 @@ public class FeedDAO {
                 userAliases.add(item.get(authorAliasAttr).getS());
             }
             if (!userAliases.isEmpty()) {
-                responseUsers = userDAO.getUsers(userAliases);
+                List<String> uniqueAliases = new ArrayList<>();
+                for (String userAlias : userAliases) {
+                    if (!uniqueAliases.contains(userAlias)) {
+                        uniqueAliases.add(userAlias);
+                    }
+                }
+                List<User> uniqueUsers = userDAO.getUsers(uniqueAliases);
+                for (String userAlias : userAliases) {
+                    for (User user : uniqueUsers) {
+                        if (user.getAlias().equals(userAlias)) {
+                            responseUsers.add(user);
+                            break;
+                        }
+                    }
+                }
             }
             for (int i = 0; i < items.size(); i++) {
                 Map<String, AttributeValue> item = items.get(i);

@@ -9,13 +9,16 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
+import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 import edu.byu.cs.tweeter.server.TestWithAuthToken;
+import edu.byu.cs.tweeter.server.dao.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.FeedDAO;
 import edu.byu.cs.tweeter.server.dao.StoryDAO;
 
@@ -23,7 +26,7 @@ public class PostStatusServiceImplTest extends TestWithAuthToken {
 
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
 
-    private final User user = new User("Testing", "User", MALE_IMAGE_URL);
+    private final User user = new User("Testing", "User", "@test", MALE_IMAGE_URL);
 
     private final Status status = new Status("Hey, 1 "
             + user.getAlias()
@@ -33,9 +36,10 @@ public class PostStatusServiceImplTest extends TestWithAuthToken {
 
     private PostStatusRequest request;
     private PostStatusResponse expectedResponse;
-    private FeedDAO mockFeedDAO;
     private StoryDAO mockStoryDAO;
     private PostStatusServiceImpl postStatusServiceImplSpy;
+
+    private AuthTokenDAO mockAuthTokenDAO;
 
     @BeforeEach
     public void setup() {
@@ -44,14 +48,14 @@ public class PostStatusServiceImplTest extends TestWithAuthToken {
         request = new PostStatusRequest(status, authToken);
 
         expectedResponse = new PostStatusResponse(true);
-        mockFeedDAO = Mockito.mock(FeedDAO.class);
-        Mockito.when(mockFeedDAO.postStatus(request)).thenReturn(true);
         mockStoryDAO = Mockito.mock(StoryDAO.class);
-        Mockito.when(mockStoryDAO.postStatus(request)).thenReturn(true);
+
+        mockAuthTokenDAO = Mockito.mock(AuthTokenDAO.class);
+        Mockito.when(mockAuthTokenDAO.checkAuthToken(request.getStatus().getUser().getAlias(), request.getAuthToken().getToken())).thenReturn(true);
 
         postStatusServiceImplSpy = Mockito.spy(PostStatusServiceImpl.class);
-        Mockito.when(postStatusServiceImplSpy.getFeedDAO()).thenReturn(mockFeedDAO);
         Mockito.when(postStatusServiceImplSpy.getStoryDAO()).thenReturn(mockStoryDAO);
+        Mockito.when(postStatusServiceImplSpy.getAuthTokenDAO()).thenReturn(mockAuthTokenDAO);
     }
 
     @Test

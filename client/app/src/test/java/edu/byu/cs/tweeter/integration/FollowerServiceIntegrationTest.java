@@ -21,16 +21,8 @@ public class FollowerServiceIntegrationTest extends TestWithAuthToken {
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private static final String FEMALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png";
 
-    private final User user1 = new User("Allen", "Anderson", MALE_IMAGE_URL);
-    private final User user2 = new User("Amy", "Ames", FEMALE_IMAGE_URL);
-    private final User user3 = new User("Bob", "Bobson", MALE_IMAGE_URL);
-    private final User user4 = new User("Bonnie", "Beatty", FEMALE_IMAGE_URL);
-    private final User user5 = new User("Chris", "Colston", MALE_IMAGE_URL);
-    private final User user6 = new User("Cindy", "Coats", FEMALE_IMAGE_URL);
-    private final User user7 = new User("Dan", "Donaldson", MALE_IMAGE_URL);
-    private final User user8 = new User("Dee", "Dempsey", FEMALE_IMAGE_URL);
-    private final User user9 = new User("Elliott", "Enderson", MALE_IMAGE_URL);
-    private final User user10 = new User("Elizabeth", "Engle", FEMALE_IMAGE_URL);
+    private final User user1 = new User("Allen", "Anderson", "@AllenAnderson", MALE_IMAGE_URL);
+    private final User user2 = new User("Amy", "Ames", "@AmyAmes", FEMALE_IMAGE_URL);
 
     private FollowerRequest validRequest;
     private FollowerRequest invalidRequest;
@@ -48,7 +40,7 @@ public class FollowerServiceIntegrationTest extends TestWithAuthToken {
         validRequest = new FollowerRequest(currentUser, 10, null, authToken);
         invalidRequest = new FollowerRequest(null, 0, null, authToken);
 
-        successResponse = new FollowerResponse(getDummyFollowers(), true);
+        successResponse = new FollowerResponse(getDummyFollowers(), false);
 
         failureResponse = "BadRequest: " + "No user";
 
@@ -73,7 +65,6 @@ public class FollowerServiceIntegrationTest extends TestWithAuthToken {
     }
 
     List<User> getDummyFollowers() {
-        return Arrays.asList(user1, user2, user3, user4, user5, user6, user7,
-                user8, user9, user10);
+        return Arrays.asList(user1, user2);
     }
 }

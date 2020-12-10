@@ -26,8 +26,8 @@ public class FollowServiceIntegrationTest extends TestWithAuthToken {
 
     @BeforeEach
     public void setup() throws IOException, TweeterRemoteException {
-        User currentUser = new User("FirstName", "LastName", null);
-        User otherUser = new User("Other", "guy", null);
+        User currentUser = new User("Follow", "Test", null);
+        User otherUser = new User("Allen", "Anderson", "@AllenAnderson", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
 
         // Setup request objects to use in the tests
         validRequest = new FollowRequest(currentUser, otherUser, authToken);

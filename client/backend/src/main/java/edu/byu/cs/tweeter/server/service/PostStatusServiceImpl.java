@@ -9,7 +9,9 @@ import edu.byu.cs.tweeter.server.dao.StoryDAO;
 public class PostStatusServiceImpl implements PostStatusService {
     @Override
     public PostStatusResponse postStatus(PostStatusRequest request) {
-
+        if (request.getStatus() == null) {
+            throw new RuntimeException("BadRequest: " + "No status");
+        }
         if (!getAuthTokenDAO().checkAuthToken(request.getStatus().getUser().getAlias(), request.getAuthToken().getToken())) {
             throw new RuntimeException("BadRequest: Invalid or Expired AuthToken");
         }

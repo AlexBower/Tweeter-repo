@@ -13,6 +13,7 @@ import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.UnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
 import edu.byu.cs.tweeter.server.TestWithAuthToken;
+import edu.byu.cs.tweeter.server.dao.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.FollowDAO;
 
 public class UnfollowServiceImplTest extends TestWithAuthToken {
@@ -21,6 +22,8 @@ public class UnfollowServiceImplTest extends TestWithAuthToken {
     private UnfollowResponse expectedResponse;
     private FollowDAO mockFollowDAO;
     private UnfollowServiceImpl unfollowServiceImplSpy;
+
+    private AuthTokenDAO mockAuthTokenDAO;
 
     @BeforeEach
     public void setup() {
@@ -37,8 +40,13 @@ public class UnfollowServiceImplTest extends TestWithAuthToken {
         mockFollowDAO = Mockito.mock(FollowDAO.class);
         Mockito.when(mockFollowDAO.unfollow(request)).thenReturn(expectedResponse);
 
+        mockAuthTokenDAO = Mockito.mock(AuthTokenDAO.class);
+        Mockito.when(mockAuthTokenDAO.checkAuthToken(
+                request.getCurrentUser().getAlias(), request.getAuthToken().getToken())).thenReturn(true);
+
         unfollowServiceImplSpy = Mockito.spy(UnfollowServiceImpl.class);
         Mockito.when(unfollowServiceImplSpy.getFollowDAO()).thenReturn(mockFollowDAO);
+        Mockito.when(unfollowServiceImplSpy.getAuthTokenDAO()).thenReturn(mockAuthTokenDAO);
     }
 
     @Test

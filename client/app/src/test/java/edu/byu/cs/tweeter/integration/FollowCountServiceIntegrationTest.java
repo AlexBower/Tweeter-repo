@@ -34,7 +34,7 @@ public class FollowCountServiceIntegrationTest extends TestWithAuthToken {
         validRequest = new FollowCountRequest(currentUser, authToken);
         invalidRequest = new FollowCountRequest(null, authToken);
 
-        successResponse = new FollowCountResponse(20, 20);
+        successResponse = new FollowCountResponse(2, 2);
 
         failureResponse = "BadRequest: " + "No user";
 

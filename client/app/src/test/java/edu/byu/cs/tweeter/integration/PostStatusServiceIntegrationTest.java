@@ -21,9 +21,9 @@ public class PostStatusServiceIntegrationTest extends TestWithAuthToken {
 
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
 
-    private final User user = new User("Testing", "User", MALE_IMAGE_URL);
+    User user = new User("FirstName", "LastName", MALE_IMAGE_URL);
 
-    private final Status status1 = new Status("Hey, 1 "
+    private final Status status1 = new Status("Hey, "
             + user.getAlias()
             + " check out this really cool url: "
             + "http://google.com",
@@ -39,8 +39,6 @@ public class PostStatusServiceIntegrationTest extends TestWithAuthToken {
 
     @BeforeEach
     public void setup() throws IOException, TweeterRemoteException {
-        User currentUser = new User("FirstName", "LastName", null);
-        User otherUser = new User("Other", "guy", null);
 
         // Setup request objects to use in the tests
         validRequest = new PostStatusRequest(status1, authToken);

@@ -17,6 +17,7 @@ import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 import edu.byu.cs.tweeter.server.TestWithAuthToken;
+import edu.byu.cs.tweeter.server.dao.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.FeedDAO;
 import edu.byu.cs.tweeter.server.dao.StoryDAO;
 
@@ -86,6 +87,8 @@ public class StatusServiceImplTest extends TestWithAuthToken {
     private StoryDAO mockStoryDAO;
     private StatusServiceImpl statusServiceImplSpy;
 
+    private AuthTokenDAO mockAuthTokenDAO;
+
     @BeforeEach
     public void setup() {
 
@@ -98,9 +101,13 @@ public class StatusServiceImplTest extends TestWithAuthToken {
         mockStoryDAO = Mockito.mock(StoryDAO.class);
         Mockito.when(mockStoryDAO.getStory(request)).thenReturn(expectedResponse);
 
+        mockAuthTokenDAO = Mockito.mock(AuthTokenDAO.class);
+        Mockito.when(mockAuthTokenDAO.checkAuthToken(request.getUser().getAlias(), request.getAuthToken().getToken())).thenReturn(true);
+
         statusServiceImplSpy = Mockito.spy(StatusServiceImpl.class);
         Mockito.when(statusServiceImplSpy.getFeedDAO()).thenReturn(mockFeedDAO);
         Mockito.when(statusServiceImplSpy.getStoryDAO()).thenReturn(mockStoryDAO);
+        Mockito.when(statusServiceImplSpy.getAuthTokenDAO()).thenReturn(mockAuthTokenDAO);
     }
 
     @Test

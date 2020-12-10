@@ -5,6 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class FollowFetcher implements RequestHandler<SQSEvent, Void> {
         String messageBody = JsonSerializer.serialize(new JobQRequest(jobList, postQRequest));
         String queueUrl = "https://sqs.us-west-2.amazonaws.com/857989844733/JobsQ";
 
+        System.out.println(jobList);
         SendMessageRequest send_msg_request = new SendMessageRequest()
                 .withQueueUrl(queueUrl)
                 .withMessageBody(messageBody);

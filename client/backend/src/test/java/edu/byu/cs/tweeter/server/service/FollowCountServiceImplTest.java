@@ -17,12 +17,13 @@ import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowCountResponse;
 import edu.byu.cs.tweeter.server.TestWithAuthToken;
 import edu.byu.cs.tweeter.server.dao.FollowDAO;
+import edu.byu.cs.tweeter.server.dao.UserDAO;
 
 public class FollowCountServiceImplTest extends TestWithAuthToken {
 
     private FollowCountRequest request;
     private FollowCountResponse expectedResponse;
-    private FollowDAO mockFollowDAO;
+    private UserDAO mockUserDAO;
     private FollowCountServiceImpl followCountServiceImplSpy;
 
     @BeforeEach
@@ -34,12 +35,12 @@ public class FollowCountServiceImplTest extends TestWithAuthToken {
 
         // Setup a mock FollowDAO that will return known responses
         expectedResponse = new FollowCountResponse(20,20);
-        mockFollowDAO = Mockito.mock(FollowDAO.class);
-        Mockito.when(mockFollowDAO.getFolloweeCount(request.getUser())).thenReturn(20);
-        Mockito.when(mockFollowDAO.getFollowerCount(request.getUser())).thenReturn(20);
+        mockUserDAO = Mockito.mock(UserDAO.class);
+        Mockito.when(mockUserDAO.getFollowCount(request.getUser().getAlias(), UserDAO.followeeCountAttr)).thenReturn(20);
+        Mockito.when(mockUserDAO.getFollowCount(request.getUser().getAlias(), UserDAO.followerCountAttr)).thenReturn(20);
 
         followCountServiceImplSpy = Mockito.spy(FollowCountServiceImpl.class);
-        Mockito.when(followCountServiceImplSpy.getFollowDAO()).thenReturn(mockFollowDAO);
+        Mockito.when(followCountServiceImplSpy.getUserDAO()).thenReturn(mockUserDAO);
     }
 
     @Test

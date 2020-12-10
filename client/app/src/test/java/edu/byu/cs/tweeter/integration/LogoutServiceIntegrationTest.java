@@ -10,8 +10,11 @@ import java.io.IOException;
 import edu.byu.cs.tweeter.TestWithAuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.LoginServiceProxy;
 import edu.byu.cs.tweeter.model.service.LogoutServiceProxy;
+import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
 
 public class LogoutServiceIntegrationTest extends TestWithAuthToken {
@@ -26,9 +29,12 @@ public class LogoutServiceIntegrationTest extends TestWithAuthToken {
 
     @BeforeEach
     public void setup() throws IOException, TweeterRemoteException {
-        User currentUser = new User("FirstName", "LastName", null);
+        User currentUser = new User("FirstName", "LastName", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
         // Setup request objects to use in the tests
-        validRequest = new LogoutRequest(currentUser, authToken);
+
+        LoginResponse response = new LoginServiceProxy().login(new LoginRequest("@FirstNameLastName", "password"));
+
+        validRequest = new LogoutRequest(currentUser, response.getAuthToken());
         invalidRequest = new LogoutRequest(null, authToken);
 
         successResponse = new LogoutResponse(true);

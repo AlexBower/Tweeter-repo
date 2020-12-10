@@ -13,6 +13,7 @@ import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.server.TestWithAuthToken;
+import edu.byu.cs.tweeter.server.dao.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.UserDAO;
 
 public class LoginServiceImplTest extends TestWithAuthToken {
@@ -25,6 +26,8 @@ public class LoginServiceImplTest extends TestWithAuthToken {
     private UserDAO mockUserDAO;
     private LoginServiceImpl loginServiceImplSpy;
 
+    private AuthTokenDAO mockAuthTokenDAO;
+
     @BeforeEach
     public void setup() {
         // Setup a request object to use in the tests
@@ -32,16 +35,21 @@ public class LoginServiceImplTest extends TestWithAuthToken {
 
         expectedResponse = new LoginResponse(user, authToken);
         mockUserDAO = Mockito.mock(UserDAO.class);
-        Mockito.when(mockUserDAO.login(request)).thenReturn(expectedResponse);
+        Mockito.when(mockUserDAO.login(request.getUsername(), request.getPassword())).thenReturn(expectedResponse.getUser());
+
+        mockAuthTokenDAO = Mockito.mock(AuthTokenDAO.class);
+        Mockito.when(mockAuthTokenDAO.createAuthToken(request.getUsername())).thenReturn(authToken);
 
         loginServiceImplSpy = Mockito.spy(LoginServiceImpl.class);
         Mockito.when(loginServiceImplSpy.getUserDAO()).thenReturn(mockUserDAO);
+        Mockito.when(loginServiceImplSpy.getAuthTokenDAO()).thenReturn(mockAuthTokenDAO);
     }
 
     @Test
     public void testLogin_validRequest_correctResponse() throws IOException, TweeterRemoteException {
         LoginResponse response = loginServiceImplSpy.login(request);
-        Assertions.assertEquals(expectedResponse, response);
+        Assertions.assertEquals(expectedResponse.getUser(), response.getUser());
+        Assertions.assertEquals(expectedResponse.getAuthToken(), response.getAuthToken());
     }
 
     @Test
